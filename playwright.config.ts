@@ -4,10 +4,11 @@ import { resolve } from 'node:path';
 const testPort = process.env.E2E_PORT || '3002';
 const baseURL = `http://127.0.0.1:${testPort}`;
 const runId = `${Date.now()}-${process.pid}`;
+const testLoginEmail = process.env.E2E_TEST_LOGIN_EMAIL || '';
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: '**/workspace.spec.ts',
+  testMatch: testLoginEmail ? '**/test-login.spec.ts' : '**/workspace.spec.ts',
   outputDir: './test-results/browser',
   fullyParallel: false,
   workers: 1,
@@ -40,6 +41,7 @@ export default defineConfig({
       UPLOAD_DIR: resolve('test-results', `uploads-${runId}`),
       SEED_DEMO: 'true',
       SESSION_TTL_HOURS: '12',
+      TEST_LOGIN_EMAIL: testLoginEmail,
     },
   },
 });

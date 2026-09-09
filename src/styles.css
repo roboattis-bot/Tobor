@@ -1645,6 +1645,22 @@ button:active:not(:disabled) {
   position: absolute;
   right: 15px;
 }
+.test-access-banner {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  border: 1px solid #d8c794;
+  border-radius: 10px;
+  background: #fff9e8;
+  color: #6c5220;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.test-access-banner strong {
+  font-size: 12px;
+  font-weight: 700;
+}
 .auth-note {
   border-top: 1px solid #eef0e9;
   margin-top: 27px;

@@ -42,6 +42,9 @@ export class Repository {
       CREATE TABLE IF NOT EXISTS files (id INTEGER PRIMARY KEY, case_id INTEGER NOT NULL REFERENCES cases(id), revision INTEGER NOT NULL, original_name TEXT NOT NULL, storage_name TEXT NOT NULL UNIQUE, mime TEXT NOT NULL, size INTEGER NOT NULL, sha256 TEXT NOT NULL, uploaded_by INTEGER NOT NULL REFERENCES users(id), created_at TEXT NOT NULL);
       CREATE INDEX IF NOT EXISTS files_case ON files(case_id);
     `);
+    const sessionColumns = this.db.prepare('PRAGMA table_info(sessions)').all();
+    if (!sessionColumns.some((column) => column.name === 'auth_mode'))
+      this.db.exec("ALTER TABLE sessions ADD COLUMN auth_mode TEXT NOT NULL DEFAULT 'password'");
   }
   all<T>(table: EntityTable): T[] {
     return (

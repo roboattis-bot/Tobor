@@ -24,6 +24,8 @@ Generate a runtime package lock in the package's `app` directory using `npm inst
 
 For the first deployment, initialize `/var/lib/tobor` from the state snapshot. For every subsequent update, deploy only a new application release and preserve `/var/lib/tobor`. Switch `/opt/tobor/current` to the new verified release, then restart only `tobor.service`. Keep the previous application release for rollback.
 
+Use `npm.cmd run package:pi -- --app-only` for an update that omits the local database and uploads entirely. Reuse the prior runtime lock and dependencies only when the generated runtime package is unchanged; otherwise generate a new lock and install that release's dependencies.
+
 The ARM64 Node runtime is downloaded from Node.js and verified against its [official release checksums](https://nodejs.org/download/release/v24.18.0/SHASUMS256.txt). Database snapshots use the [Node SQLite backup API](https://nodejs.org/download/release/v24.18.0/docs/api/sqlite.html#sqlitebackupsource-db-path-options).
 
 ## Service operations
@@ -44,3 +46,11 @@ From the development computer on the same network, run `npm.cmd run check:deploy
 Back up `/var/lib/tobor` with SQLite's online backup API, or stop only Tobor cleanly before copying its complete data directory. Restore to a separate location and verify login, records and attachments before changing the live data. A copy on the same SD card is not protection against SD-card failure.
 
 Do not store the SSH password or runtime configuration secrets in Git. Deployment archives and private data remain excluded by `.gitignore`.
+
+## Temporary test login
+
+For the owner's testing session, `TEST_LOGIN_EMAIL` in `/etc/tobor/tobor.env` identifies the existing account that accepts any nonempty password. This does not create accounts. Other account emails still use their saved passwords. The login page and dashboard display a test-access notice, and edits still change the workspace's saved records.
+
+To restore normal login, remove `TEST_LOGIN_EMAIL` from the runtime configuration and restart only `tobor.service`. Sessions created through test login are revoked automatically; the account's saved password is required again. Leave this setting unset for a normal deployment. Keep the configured personal email in private runtime configuration rather than source control.
+
+To check actual test-account entry after deployment, append the configured email to the check command: `npm.cmd run check:deployment -- http://server:3001 operator@example.com`. This optional check signs in with `test`, checks the dashboard at desktop/mobile sizes, then signs out. It changes only its own login sessions and leaves business records intact.

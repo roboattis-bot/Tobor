@@ -1,4 +1,4 @@
-import type { DashboardData, User } from '../shared/types';
+import type { AuthState, DashboardData } from '../shared/types';
 export async function api<T = any>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`/api${path}`, {
     ...options,
@@ -19,7 +19,7 @@ export async function api<T = any>(path: string, options: RequestInit = {}): Pro
   return payload as T;
 }
 export const getDashboard = () => api<DashboardData>('/dashboard');
-export const getAuth = () => api<{ user: User | null; needsSetup: boolean }>('/auth/me');
+export const getAuth = () => api<AuthState>('/auth/me');
 export const money = (amount: number) =>
   new Intl.NumberFormat('en-IN', {
     style: 'currency',

@@ -155,6 +155,10 @@ const parseId = (request: FastifyRequest): number => {
 };
 
 export async function buildServer(options: ServerOptions = {}): Promise<FastifyInstance> {
+  const testLoginEmail = z
+    .email()
+    .optional()
+    .parse(process.env.TEST_LOGIN_EMAIL?.trim().toLowerCase() || undefined);
   const app = Fastify({
     logger: options.logger ?? process.env.NODE_ENV !== 'test',
     bodyLimit: 1_048_576,
@@ -164,6 +168,11 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     options.databasePath ?? process.env.DATABASE_PATH ?? './data/tobor.sqlite',
   );
   repo.seed(options.demo ?? process.env.SEED_DEMO !== 'false');
+  repo.db
+    .prepare(
+      "DELETE FROM sessions WHERE auth_mode = 'test' AND user_id NOT IN (SELECT id FROM users WHERE email = ? COLLATE NOCASE)",
+    )
+    .run(testLoginEmail ?? '');
   const uploadDir = resolve(options.uploadDir ?? process.env.UPLOAD_DIR ?? './data/uploads');
   mkdirSync(uploadDir, { recursive: true });
   const sessionHours = options.sessionTtlHours ?? Number(process.env.SESSION_TTL_HOURS || 12);
@@ -314,26 +323,30 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
       const tokenHash = digest(token);
       const row = repo.db
         .prepare(
-          'SELECT u.id, u.name, u.email, u.role, s.expires_at AS expiresAt FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ? AND s.expires_at > ?',
+          "SELECT u.id, u.name, u.email, u.role, s.expires_at AS expiresAt FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ? AND s.expires_at > ? AND (s.auth_mode = 'password' OR (s.auth_mode = 'test' AND u.email = ? COLLATE NOCASE))",
         )
-        .get(tokenHash, Date.now()) as (User & { expiresAt: number }) | undefined;
+        .get(tokenHash, Date.now(), testLoginEmail ?? '') as
+        (User & { expiresAt: number }) | undefined;
       if (row) request.sessionUser = { ...row, tokenHash };
     }
     if (['/api/health', '/api/auth/me', '/api/auth/setup', '/api/auth/login'].includes(path))
       return;
     if (!request.sessionUser) fail(401, 'Please sign in to continue.');
   });
-  const startSession = (userId: number) => {
+  const startSession = (userId: number, authMode: 'password' | 'test' = 'password') => {
     const token = randomBytes(32).toString('hex');
     repo.db
-      .prepare('INSERT INTO sessions(token_hash, user_id, expires_at) VALUES (?, ?, ?)')
-      .run(digest(token), userId, Date.now() + sessionMs);
+      .prepare(
+        'INSERT INTO sessions(token_hash, user_id, expires_at, auth_mode) VALUES (?, ?, ?, ?)',
+      )
+      .run(digest(token), userId, Date.now() + sessionMs, authMode);
     return token;
   };
   app.get('/api/health', async () => ({ ok: true, service: 'tobor-api' }));
   app.get('/api/auth/me', async (request) => ({
     user: request.sessionUser ? publicUser(request.sessionUser) : null,
     needsSetup: userCount() === 0,
+    testLoginEnabled: Boolean(testLoginEmail),
   }));
   const authLimit = { rateLimit: { max: 10, timeWindow: '15 minutes' } };
   app.post('/api/auth/setup', { config: authLimit }, async (request, reply) => {
@@ -387,12 +400,19 @@ export async function buildServer(options: ServerOptions = {}): Promise<FastifyI
     const row = repo.db
       .prepare('SELECT id, name, email, role, password_hash FROM users WHERE email = ?')
       .get(data.email) as (User & { password_hash: string }) | undefined;
-    const valid = await verifyPassword(
-      data.password,
-      row?.password_hash ?? `${'0'.repeat(32)}:${'0'.repeat(128)}`,
-    );
+    const testAccess = Boolean(row && testLoginEmail === data.email);
+    const valid =
+      testAccess ||
+      (await verifyPassword(
+        data.password,
+        row?.password_hash ?? `${'0'.repeat(32)}:${'0'.repeat(128)}`,
+      ));
     if (!row || !valid) fail(401, 'Email or password is incorrect.');
-    reply.setCookie('tobor_session', startSession(row.id), cookieOptions);
+    reply.setCookie(
+      'tobor_session',
+      startSession(row.id, testAccess ? 'test' : 'password'),
+      cookieOptions,
+    );
     return { user: publicUser(row) };
   });
   app.post('/api/auth/logout', async (request, reply) => {

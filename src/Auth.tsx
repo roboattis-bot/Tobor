@@ -27,9 +27,11 @@ export function Brand({ light = false }: { light?: boolean }) {
 }
 export default function Auth({
   needsSetup,
+  testLoginEnabled,
   onLogin,
 }: {
   needsSetup: boolean;
+  testLoginEnabled: boolean;
   onLogin: (user: User) => void;
 }) {
   const [showPassword, setShowPassword] = useState(false),
@@ -93,7 +95,9 @@ export default function Auth({
       <section className="auth-form-side">
         <div className="auth-top">
           <span>WORKSHOP OS</span>
-          <span className="pill">Pilot workspace</span>
+          <span className="pill">
+            {testLoginEnabled ? 'Test access enabled' : 'Pilot workspace'}
+          </span>
         </div>
         <div className="auth-form-content">
           <div className="auth-icon">
@@ -106,6 +110,14 @@ export default function Auth({
               ? 'Create your account to bring your workshop into focus.'
               : 'Sign in to see what’s moving, what needs you, and what’s next.'}
           </p>
+          {testLoginEnabled && !needsSetup && (
+            <div className="test-access-banner" role="status">
+              <strong>Testing mode</strong>
+              <span>
+                Enter the designated account email and any password to explore this workspace.
+              </span>
+            </div>
+          )}
           <form onSubmit={submit}>
             {needsSetup && (
               <label className="field">
@@ -139,7 +151,11 @@ export default function Auth({
                   type={showPassword ? 'text' : 'password'}
                   autoComplete={needsSetup ? 'new-password' : 'current-password'}
                   placeholder={
-                    needsSetup ? 'Create a password (12+ characters)' : 'Enter your password'
+                    needsSetup
+                      ? 'Create a password (12+ characters)'
+                      : testLoginEnabled
+                        ? 'Any password for the test account'
+                        : 'Enter your password'
                   }
                   required
                   minLength={needsSetup ? 12 : 1}
@@ -178,14 +194,16 @@ export default function Auth({
             <p>
               {needsSetup
                 ? 'Start with clearly labeled sample cases and equipment. Your changes are saved to your local database.'
-                : 'Your cases, approvals, and workshop records are kept together in your private workspace.'}
+                : testLoginEnabled
+                  ? 'Test access is active for one account. Changes made during testing are saved.'
+                  : 'Your cases, approvals, and workshop records are kept together in your private workspace.'}
             </p>
           </div>
         </div>
         <footer className="auth-footer">
           <span>© {new Date().getFullYear()} Tobor</span>
           <span>
-            <LockKeyhole size={12} /> Private by design
+            <LockKeyhole size={12} /> {testLoginEnabled ? 'Testing mode' : 'Private by design'}
           </span>
         </footer>
       </section>

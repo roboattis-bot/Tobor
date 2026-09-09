@@ -5,6 +5,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const releaseId = new Date().toISOString().replaceAll(/[-:.]/g, '');
+const includeState = !process.argv.includes('--app-only');
 const root = resolve('.tools/pi-releases', releaseId);
 const app = resolve(root, 'app');
 await mkdir(app, { recursive: true });
@@ -48,8 +49,8 @@ await writeFile(
 );
 await cp('deploy', resolve(root, 'deploy'), { recursive: true });
 const state = resolve(root, 'state');
-await mkdir(state);
-if (existsSync('data/tobor.sqlite')) {
+if (includeState) await mkdir(state);
+if (includeState && existsSync('data/tobor.sqlite')) {
   const source = new DatabaseSync('data/tobor.sqlite', { readOnly: true });
   try {
     await backup(source, resolve(state, 'tobor.sqlite'));
@@ -67,7 +68,7 @@ if (existsSync('data/tobor.sqlite')) {
     snapshot.close();
   }
 }
-if (existsSync('data/uploads'))
+if (includeState && existsSync('data/uploads'))
   await cp('data/uploads', resolve(state, 'uploads'), { recursive: true });
 await writeFile(
   resolve('.tools', 'pi-release.json'),

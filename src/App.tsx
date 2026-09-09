@@ -25,7 +25,7 @@ import {
   Wrench,
   X,
 } from 'lucide-react';
-import type { DashboardData, Page, User } from '../shared/types';
+import type { AuthState, DashboardData, Page } from '../shared/types';
 import { api, getAuth, getDashboard } from './api';
 import Auth, { Brand } from './Auth';
 import Dashboard from './Dashboard';
@@ -61,7 +61,7 @@ function initialPage(): Page {
     : 'overview';
 }
 export default function App() {
-  const [auth, setAuth] = useState<{ user: User | null; needsSetup: boolean } | null>(null),
+  const [auth, setAuth] = useState<AuthState | null>(null),
     [data, setData] = useState<DashboardData | null>(null),
     [error, setError] = useState('');
   const [page, setPage] = useState<Page>(initialPage),
@@ -105,7 +105,11 @@ export default function App() {
   }, []);
   useEffect(() => {
     const expireSession = () => {
-      setAuth({ user: null, needsSetup: false });
+      setAuth((previous) => ({
+        user: null,
+        needsSetup: false,
+        testLoginEnabled: previous?.testLoginEnabled ?? false,
+      }));
       setData(null);
       setCaseId(null);
       setNewCase(false);
@@ -167,7 +171,11 @@ export default function App() {
   async function logout() {
     try {
       await api('/auth/logout', { method: 'POST' });
-      setAuth({ user: null, needsSetup: false });
+      setAuth((previous) => ({
+        user: null,
+        needsSetup: false,
+        testLoginEnabled: previous?.testLoginEnabled ?? false,
+      }));
       setData(null);
       setCaseId(null);
       setNewCase(false);
@@ -194,7 +202,11 @@ export default function App() {
   }
   if (!auth.user)
     return (
-      <Auth needsSetup={auth.needsSetup} onLogin={(user) => setAuth({ user, needsSetup: false })} />
+      <Auth
+        needsSetup={auth.needsSetup}
+        testLoginEnabled={auth.testLoginEnabled}
+        onLogin={(user) => setAuth({ ...auth, user, needsSetup: false })}
+      />
     );
   const currentNav = navigation.find((n) => n.page === page);
   const matches =
@@ -401,6 +413,12 @@ export default function App() {
           </div>
         </header>
         <main id="main-content">
+          {auth.testLoginEnabled && (
+            <div className="test-access-banner" role="status">
+              <strong>Test access enabled</strong>
+              <span>The designated test account accepts any password.</span>
+            </div>
+          )}
           <div className="workspace-status">
             <span>
               <span className={`live-dot ${connected ? '' : 'disconnected'}`} />

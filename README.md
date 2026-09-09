@@ -54,6 +54,7 @@ Copy `.env.example` to `.env` if you want to override defaults; the server scrip
 | `SEED_DEMO`         | `true`                          | Seed example records for a fresh database. Set to `false` before the first start for an empty pilot workspace. |
 | `NODE_ENV`          | Development behavior when unset | `production` enables secure cookies by default.                                                                |
 | `COOKIE_SECURE`     | Derived from `NODE_ENV`         | Explicit `true` requires HTTPS; `false` supports the intentional HTTP LAN deployment.                          |
+| `TEST_LOGIN_EMAIL`  | Unset                           | Existing account allowed to enter any nonempty password during testing. Leave unset for normal login.          |
 
 Relative paths resolve from the folder where you start the server. Changing `SEED_DEMO` does not erase an existing database. Demonstration records are editable samples; changing a UI setting does not turn sample printer values into physical telemetry.
 
@@ -86,11 +87,13 @@ npm.cmd test
 npm.cmd run test:e2e
 ```
 
-The build checks TypeScript and creates the frontend bundle. Eight backend tests cover login/session behavior, production cookie configuration, workflow and revision gates, persistence, private attachments, exports and live events. Browser tests use installed Microsoft Edge (`channel: 'msedge'` in `playwright.config.ts`), an isolated database and port 3002. If Edge is unavailable, install it or configure Playwright's Chromium channel and install that browser. Browser accounts never populate the real workspace database.
+The build checks TypeScript and creates the frontend bundle. Nine backend tests cover login/session behavior, scoped test access and its revocation, production cookie configuration, workflow and revision gates, persistence, private attachments, exports and live events. Browser tests use installed Microsoft Edge (`channel: 'msedge'` in `playwright.config.ts`), an isolated database and port 3002. If Edge is unavailable, install it or configure Playwright's Chromium channel and install that browser. Browser accounts never populate the real workspace database.
 
 Run `npm.cmd run benchmark` for a repeatable check against a disposable local database. On this machine (Node 24.18, Windows, Intel i5-12450HX), the sample workspace returned the complete 35,058-byte dashboard response in **6.926 ms median / 14.767 ms p95** over local HTTP. This used 10 warmups and 60 sequential authenticated requests, one concurrent client, local SQLite WAL, and 18 cases / 10 printers / 6 parts. It includes response download and excludes login hashing, browser rendering, TLS and remote network latency. It is a local baseline, not a production latency guarantee or load test.
 
-Validation completed: production build, **8 backend tests**, and **4 browser workflow tests** pass. Browser checks cover desktop and mobile login, session revocation, saved cases and files, all eight modules, quote approval, quality release, and reviewed reorders. Screenshots are saved in `test-results/tobor-*.png`.
+Validation completed: production build, **9 backend tests**, **4 browser workflow tests**, and **1 test-login browser test** pass. Browser checks cover desktop and mobile login, session revocation, saved cases and files, all eight modules, quote approval, quality release, and reviewed reorders. Screenshots are saved in `test-results/tobor-*.png`.
+
+For the dedicated test-login browser check, set `E2E_TEST_LOGIN_EMAIL=test-access@example.test` in the test process and run `npm.cmd run test:e2e`. This selects the separate test-login scenario on a disposable database. Unset that variable afterward to run the normal four workflow tests. `TEST_LOGIN_EMAIL` is off by default in the application; when explicitly configured, the login page and dashboard show that the designated account accepts any nonempty password. Remove the setting and restart the API to restore normal login and revoke test sessions.
 
 ## Back up and restore
 

@@ -16,6 +16,11 @@ export interface User {
   email: string;
   role: string;
 }
+export interface AuthState {
+  user: User | null;
+  needsSetup: boolean;
+  testLoginEnabled: boolean;
+}
 export interface CaseRecord {
   id: number;
   reference: string;
