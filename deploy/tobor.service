@@ -1,0 +1,36 @@
+[Unit]
+Description=Tobor workshop dashboard
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=tobor
+Group=tobor
+WorkingDirectory=/opt/tobor/current
+EnvironmentFile=/etc/tobor/tobor.env
+ExecStart=/opt/tobor/node/bin/node /opt/tobor/current/server.mjs
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/tobor
+RestrictSUIDSGID=true
+RestrictRealtime=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+TasksMax=64
+Nice=5
+CPUQuota=100%
+OOMScoreAdjust=300
+Environment=UV_THREADPOOL_SIZE=2
+Environment=NODE_OPTIONS=--max-old-space-size=160
+
+[Install]
+WantedBy=multi-user.target
