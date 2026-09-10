@@ -15,7 +15,7 @@
   align-items: center;
   gap: 9px;
   font: inherit;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 550;
   white-space: nowrap;
   cursor: pointer;
@@ -25,7 +25,7 @@
   border-bottom-color: #173f35;
 }
 .business-tabs > button > span {
-  font-size: 10px;
+  font-size: 13px;
   padding: 3px 6px;
   border-radius: 5px;
   background: #f1f3f1;
@@ -65,7 +65,7 @@
   width: 100%;
   color: #26372e;
   font: inherit;
-  font-size: 12px;
+  font-size: 15px;
   min-width: 0;
 }
 .page-search input::placeholder {
@@ -93,7 +93,7 @@
   border: 0;
   background: transparent;
   font: inherit;
-  font-size: 12px;
+  font-size: 15px;
   color: #55645c;
   outline: 0;
   max-width: 155px;
@@ -117,7 +117,7 @@
   white-space: nowrap;
 }
 .business-table th {
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   font-weight: 600;
@@ -130,7 +130,7 @@
 .business-table td {
   padding: 17px 18px;
   border-bottom: 1px solid #f0f2f0;
-  font-size: 12px;
+  font-size: 15px;
   color: #536259;
 }
 .business-table th:first-child,
@@ -161,7 +161,7 @@
 }
 .case-name-button strong {
   display: block;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 600;
   color: #34463c;
   max-width: 255px;
@@ -171,7 +171,7 @@
 .case-name-button small {
   display: block;
   color: #68766d;
-  font-size: 10px;
+  font-size: 13px;
   margin-top: 6px;
 }
 .mini-part-icon {
@@ -204,7 +204,7 @@
 .table-secondary {
   display: block;
   color: #68766d;
-  font-size: 10px;
+  font-size: 13px;
   margin-top: 6px;
 }
 .table-customer {
@@ -235,7 +235,7 @@
   padding: 17px 24px;
   border-top: 1px solid #edf0ed;
   color: #68766d;
-  font-size: 10px;
+  font-size: 13px;
 }
 .table-bottom > span:last-child {
   display: flex;
@@ -247,7 +247,7 @@
 }
 .priority-label {
   display: block;
-  font-size: 9px;
+  font-size: 13px;
   margin-top: 5px;
   color: #68766d;
 }
@@ -260,7 +260,7 @@
   gap: 10px;
   margin: 22px 0 0;
   color: #68766d;
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.8;
 }
 .page-note > svg {
@@ -281,14 +281,14 @@
 }
 .page-empty h3 {
   color: #3e5144;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 550;
   margin: 8px 0;
 }
 .page-empty p {
   max-width: 440px;
   margin: 0 auto 18px;
-  font-size: 12px;
+  font-size: 15px;
   line-height: 1.8;
 }
 .page-empty .button {
@@ -328,7 +328,7 @@
   background: #fbf4e8;
 }
 .small-stat p {
-  font-size: 11px;
+  font-size: 15px;
   color: #68766d;
   margin: 0 0 9px;
 }
@@ -340,7 +340,7 @@
   line-height: 1.1;
 }
 .small-stat strong > small {
-  font-size: 11px;
+  font-size: 15px;
   letter-spacing: 0;
   color: #68766d;
   font-weight: 400;
@@ -349,7 +349,7 @@
 .stat-footnote {
   display: block;
   color: #68766d;
-  font-size: 10px;
+  font-size: 13px;
   margin-top: 10px;
   line-height: 1.6;
 }
@@ -361,14 +361,14 @@
   margin: 28px 0 16px;
 }
 .section-heading h2 {
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 550;
   color: #344a3b;
   margin: 0 0 6px;
   letter-spacing: -0.4px;
 }
 .section-heading p {
-  font-size: 11px;
+  font-size: 15px;
   color: #68766d;
   margin: 0;
   line-height: 1.6;
@@ -382,7 +382,7 @@
   border-radius: 7px;
   background: #fff;
   color: #68766d;
-  font-size: 10px;
+  font-size: 13px;
   white-space: nowrap;
 }
 .subtle-pill .status-dot {
@@ -406,7 +406,7 @@
   margin-bottom: 22px;
 }
 .job-position {
-  font-size: 11px;
+  font-size: 15px;
   color: #68766d;
   font-weight: 600;
 }
@@ -417,7 +417,7 @@
   gap: 10px;
   width: 100%;
   font: inherit;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 550;
   color: #344b3b;
   background: none;
@@ -431,7 +431,7 @@
   color: #68766d;
 }
 .production-job > p {
-  font-size: 10px;
+  font-size: 13px;
   margin: 8px 0 20px;
 }
 .job-meta {
@@ -442,12 +442,12 @@
 .job-meta span {
   display: block;
   color: #68766d;
-  font-size: 9px;
+  font-size: 13px;
   margin-bottom: 5px;
 }
 .job-meta strong {
   display: block;
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 500;
   color: #5d6c5e;
 }
@@ -461,14 +461,14 @@
   padding-top: 15px;
 }
 .job-footer > span {
-  font-size: 9px;
+  font-size: 13px;
   display: flex;
   gap: 5px;
   align-items: center;
   color: #68766d;
 }
 .job-footer .button {
-  font-size: 10px;
+  font-size: 13px;
 }
 .full-grid {
   grid-column: 1/-1;
@@ -499,23 +499,23 @@
   color: #68766d;
 }
 .machine-card .badge {
-  font-size: 8px;
+  font-size: 13px;
   padding: 5px 6px;
   gap: 4px;
 }
 .machine-card h3 {
   margin: 0;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 550;
   color: #384f3b;
 }
 .machine-card > p {
-  font-size: 10px;
+  font-size: 13px;
   margin: 7px 0 15px;
   color: #68766d;
 }
 .machine-qualification {
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
   display: flex;
   align-items: center;
@@ -528,7 +528,7 @@
 }
 .machine-manual label {
   display: block;
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
   margin-bottom: 8px;
 }
@@ -539,12 +539,12 @@
   border-radius: 6px;
   padding: 8px;
   font: inherit;
-  font-size: 10px;
+  font-size: 13px;
   color: #647753;
 }
 .manual-note {
   display: block;
-  font-size: 8px;
+  font-size: 13px;
   color: #68766d;
   margin-top: 9px;
 }
@@ -558,7 +558,7 @@
   margin: 8px 0;
 }
 .business-modal .modal-header .muted {
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.7;
   max-width: 410px;
 }
@@ -579,7 +579,7 @@
   margin-bottom: 17px;
 }
 .business-modal .field > span {
-  font-size: 11px;
+  font-size: 15px;
   color: #68795b;
   font-weight: 500;
 }
@@ -590,7 +590,7 @@
   border-radius: 7px;
   padding: 11px 12px;
   font: inherit;
-  font-size: 12px;
+  font-size: 15px;
   color: #425934;
   width: 100%;
   min-width: 0;
@@ -615,13 +615,13 @@
 }
 .quote-customer strong {
   display: block;
-  font-size: 12px;
+  font-size: 15px;
   color: #4c6240;
   font-weight: 550;
 }
 .quote-customer span {
   display: block;
-  font-size: 10px;
+  font-size: 13px;
   margin-top: 5px;
   color: #68766d;
 }
@@ -633,7 +633,7 @@
 .quote-preview > div {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 15px;
   color: #68766d;
   margin: 7px 0 12px;
 }
@@ -655,13 +655,13 @@
   color: #294918;
 }
 .fine-print {
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.8;
   color: #68766d;
   margin: 14px 0 0;
 }
 .page-form-error {
-  font-size: 12px;
+  font-size: 15px;
   color: #a64937;
   background: #fff3ee;
   border: 1px solid #f4d8cc;
@@ -713,7 +713,7 @@
   padding: 0;
   color: #4b6138;
   font: inherit;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 550;
   text-align: left;
   cursor: pointer;
@@ -723,25 +723,25 @@
   flex-shrink: 0;
 }
 .quote-row-leading p {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
   margin: 8px 0 0;
 }
 .quote-row-value strong {
   display: block;
-  font-size: 16px;
+  font-size: 18px;
   color: #4a6533;
   font-weight: 550;
   letter-spacing: -0.3px;
 }
 .quote-row-value > span {
   display: block;
-  font-size: 9px;
+  font-size: 13px;
   margin-top: 7px;
   color: #68766d;
 }
 .quote-actions .button {
-  font-size: 10px;
+  font-size: 13px;
   white-space: nowrap;
 }
 .approved-caption {
@@ -749,14 +749,14 @@
   align-items: center;
   gap: 5px;
   color: #68766d;
-  font-size: 9px;
+  font-size: 13px;
 }
 .quote-breakdown {
   grid-column: 1/-1;
   margin-left: 55px;
 }
 .quote-breakdown summary {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
   cursor: pointer;
   width: max-content;
@@ -771,14 +771,14 @@
   flex-wrap: wrap;
 }
 .quote-breakdown > div > span {
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
 }
 .quote-breakdown strong {
   display: block;
   margin-top: 6px;
   color: #687f4e;
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 500;
 }
 .approval-summary {
@@ -791,12 +791,12 @@
   color: #68766d;
 }
 .approval-summary h3 {
-  font-size: 13px;
+  font-size: 15px;
   color: #526e37;
   margin: 0;
 }
 .approval-summary p {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
   margin: 7px 0 0;
 }
@@ -807,7 +807,7 @@
   font-weight: 550;
 }
 .dialog-explainer {
-  font-size: 12px;
+  font-size: 15px;
   line-height: 1.8;
   color: #68766d;
   margin: 20px 0;
@@ -816,7 +816,7 @@
   display: flex;
   gap: 11px;
   align-items: flex-start;
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.8;
   color: #68766d;
   padding: 14px 0;
@@ -850,13 +850,13 @@
   flex-shrink: 0;
 }
 .quality-banner h3 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 550;
   color: #456724;
   margin: 0 0 7px;
 }
 .quality-banner p {
-  font-size: 11px;
+  font-size: 15px;
   color: #68766d;
   margin: 0;
   line-height: 1.7;
@@ -871,7 +871,7 @@
 }
 .quality-banner > span > small {
   display: block;
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
   margin-top: 5px;
 }
@@ -889,19 +889,19 @@
   gap: 10px;
 }
 .panel-heading h3 {
-  font-size: 14px;
+  font-size: 16px;
   color: #425b37;
   font-weight: 550;
   margin: 0;
 }
 .panel-heading p {
-  font-size: 10px;
+  font-size: 13px;
   margin: 6px 0 0;
   color: #68766d;
   line-height: 1.7;
 }
 .panel-heading > span:not(.subtle-pill):not(.assumption-label) {
-  font-size: 11px;
+  font-size: 15px;
   color: #68766d;
 }
 .inspection-queue .panel-heading {
@@ -934,20 +934,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
   margin-bottom: 9px;
 }
 .inspection-case strong {
   display: block;
-  font-size: 12px;
+  font-size: 15px;
   color: #4a6834;
   font-weight: 550;
   line-height: 1.6;
 }
 .inspection-case small {
   display: block;
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
   margin-top: 5px;
 }
@@ -980,12 +980,12 @@
   margin: 8px 0;
 }
 .inspection-detail-header p:last-child {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
   margin: 0;
 }
 .inspection-detail-header .eyebrow {
-  font-size: 8px;
+  font-size: 13px;
   color: #68766d;
 }
 .inspection-section-title {
@@ -996,14 +996,14 @@
   color: #68766d;
 }
 .inspection-section-title h3 {
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 550;
   color: #667f48;
   margin: 0;
 }
 .inspection-section-title > span {
   margin-left: auto;
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
 }
 .quality-check-row {
@@ -1042,13 +1042,13 @@
   color: #68766d;
 }
 .quality-check-heading h4 {
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 550;
   color: #607c40;
   margin: 3px 0 7px;
 }
 .quality-check-heading h4 > span {
-  font-size: 8px;
+  font-size: 13px;
   background: #f3f6ec;
   padding: 3px 5px;
   border-radius: 4px;
@@ -1059,13 +1059,13 @@
 .quality-check-heading p {
   margin: 0;
   color: #68766d;
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.7;
 }
 .quality-check-heading small {
   display: block;
   color: #68766d;
-  font-size: 8px;
+  font-size: 13px;
   margin-top: 5px;
 }
 .quality-check-inputs {
@@ -1084,7 +1084,7 @@
   gap: 7px;
 }
 .quality-check-inputs .field > span {
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
 }
 .quality-check-inputs .field input,
@@ -1096,7 +1096,7 @@
   border-radius: 6px;
   padding: 9px;
   font: inherit;
-  font-size: 10px;
+  font-size: 13px;
   color: #68884a;
   height: 35px;
 }
@@ -1105,7 +1105,7 @@
 }
 .quality-check-inputs > .button {
   height: 35px;
-  font-size: 10px;
+  font-size: 13px;
 }
 .quality-release {
   padding: 20px 25px;
@@ -1120,18 +1120,18 @@
   display: flex;
   gap: 7px;
   align-items: center;
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
 }
 .quality-release .button {
-  font-size: 11px;
+  font-size: 15px;
 }
 .private-library {
   display: flex;
   align-items: center;
   gap: 7px;
   color: #68766d;
-  font-size: 10px;
+  font-size: 13px;
 }
 .library-feature {
   display: grid;
@@ -1144,7 +1144,7 @@
   overflow: hidden;
 }
 .library-feature .eyebrow {
-  font-size: 8px;
+  font-size: 13px;
   color: #68766d;
 }
 .library-feature h2 {
@@ -1157,7 +1157,7 @@
 }
 .library-feature p {
   color: #68766d;
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.8;
   max-width: 360px;
   margin: 0;
@@ -1195,7 +1195,7 @@
   background: #f4f8eb;
   padding: 8px 10px;
   border-radius: 7px;
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
   transform: rotate(3deg);
 }
@@ -1210,7 +1210,7 @@
 }
 .library-part-count > small {
   display: block;
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
   margin-top: 7px;
 }
@@ -1224,7 +1224,7 @@
   max-width: 400px;
 }
 .library-result-count {
-  font-size: 11px;
+  font-size: 15px;
   color: #68766d;
   margin-left: auto;
 }
@@ -1258,7 +1258,7 @@
   position: absolute;
   top: 14px;
   left: 14px;
-  font-size: 8px;
+  font-size: 13px;
   padding: 5px 7px;
   background: #ffffff9c;
   border: 1px solid #ffffff80;
@@ -1269,7 +1269,7 @@
   position: absolute;
   bottom: 13px;
   right: 14px;
-  font-size: 8px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #68766d;
@@ -1342,18 +1342,18 @@
   padding: 20px;
 }
 .part-code {
-  font-size: 8px;
+  font-size: 13px;
   color: #68766d;
   letter-spacing: 0.05em;
 }
 .part-card h3 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 550;
   color: #5b7048;
   margin: 9px 0 7px;
 }
 .part-card-content > p {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
   margin: 0 0 18px;
 }
@@ -1362,7 +1362,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-size: 8px;
+  font-size: 13px;
   color: #68766d;
   border-bottom: 1px solid #edf2e6;
   padding-bottom: 16px;
@@ -1380,7 +1380,7 @@
   margin-top: 15px;
 }
 .part-card-actions .button {
-  font-size: 10px;
+  font-size: 13px;
 }
 .reorder-part {
   display: flex;
@@ -1395,18 +1395,18 @@
   height: 62px;
 }
 .reorder-part h3 {
-  font-size: 15px;
+  font-size: 17px;
   color: #536d3b;
   font-weight: 550;
   margin: 0 0 7px;
 }
 .reorder-part p {
   color: #68766d;
-  font-size: 10px;
+  font-size: 13px;
   margin: 0 0 7px;
 }
 .reorder-part > div > span {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
 }
 .insights-grid {
@@ -1432,16 +1432,16 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 9px;
-  font-size: 11px;
+  font-size: 15px;
   color: #68766d;
 }
 .service-bar-row strong {
-  font-size: 12px;
+  font-size: 15px;
   color: #69854d;
   font-weight: 550;
 }
 .service-bar-row strong > small {
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 400;
   color: #68766d;
   margin-left: 5px;
@@ -1470,7 +1470,7 @@
 .service-bar-value {
   display: block;
   margin-top: 7px;
-  font-size: 8px;
+  font-size: 13px;
   color: #68766d;
 }
 .capacity-panel .panel-heading > svg {
@@ -1492,13 +1492,13 @@
   font-weight: 500;
 }
 .capacity-display > strong > span {
-  font-size: 16px;
+  font-size: 18px;
   letter-spacing: 0;
   margin-left: 7px;
   color: #68766d;
 }
 .capacity-display > span {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
   margin-bottom: 5px;
 }
@@ -1520,7 +1520,7 @@
   justify-content: space-between;
   margin: 10px 25px 0;
   color: #68766d;
-  font-size: 8px;
+  font-size: 13px;
 }
 .capacity-callout {
   margin: 25px 25px 0;
@@ -1538,18 +1538,18 @@
 }
 .capacity-callout p {
   margin: 0;
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.8;
   color: #68766d;
 }
 .capacity-panel > .fine-print {
   margin: 17px 25px 23px;
-  font-size: 9px;
+  font-size: 13px;
 }
 .assumption-label {
   border: 1px solid #eae2cd;
   background: #faf7ef;
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
   padding: 6px 8px;
   border-radius: 6px;
@@ -1565,7 +1565,7 @@
   padding: 12px 0;
 }
 .economics-grid > div > span {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
   display: block;
 }
@@ -1578,7 +1578,7 @@
   margin-top: 12px;
 }
 .economics-grid small {
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
   display: block;
   margin-top: 8px;
@@ -1597,7 +1597,7 @@
   border-top: 1px solid #ecf1e3;
   padding: 15px 25px;
   margin: 0;
-  font-size: 9px;
+  font-size: 13px;
 }
 .improvement-grid {
   display: grid;
@@ -1612,7 +1612,7 @@
   position: absolute;
   right: 19px;
   top: 19px;
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
 }
 .improvement-card > svg {
@@ -1620,14 +1620,14 @@
   margin-bottom: 20px;
 }
 .improvement-card h3 {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 550;
   line-height: 1.6;
   color: #67814b;
   margin: 0 0 10px;
 }
 .improvement-card p {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
   line-height: 1.9;
   margin: 0;
@@ -1643,7 +1643,7 @@
   margin-top: 27px;
 }
 .workflow-explainer .eyebrow {
-  font-size: 8px;
+  font-size: 13px;
   color: #68766d;
 }
 .workflow-explainer h2 {
@@ -1655,7 +1655,7 @@
   margin: 16px 0;
 }
 .workflow-explainer > div > p {
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.9;
   color: #68766d;
   margin: 0;
@@ -1681,17 +1681,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 13px;
   flex-shrink: 0;
   border: 1px solid #dde7cd;
 }
 .workflow-explainer li strong {
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 550;
   color: #68766d;
 }
 .workflow-explainer li p {
-  font-size: 9px;
+  font-size: 13px;
   line-height: 1.8;
   margin: 5px 0 0;
   color: #68766d;
@@ -1713,13 +1713,13 @@
   margin-bottom: 26px;
 }
 .settings-section-title h3 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 550;
   color: #647e48;
   margin: 0 0 7px;
 }
 .settings-section-title p {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
   margin: 0;
   line-height: 1.7;
@@ -1732,7 +1732,7 @@
   min-width: 0;
 }
 .workspace-settings .field > span {
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 500;
   color: #68766d;
   line-height: 1.6;
@@ -1743,13 +1743,13 @@
   border-radius: 7px;
   background: #fff;
   font: inherit;
-  font-size: 12px;
+  font-size: 15px;
   color: #68766d;
   width: 100%;
   min-width: 0;
 }
 .workspace-settings .field small {
-  font-size: 9px;
+  font-size: 13px;
   line-height: 1.8;
   color: #68766d;
 }
@@ -1761,7 +1761,7 @@
   border-radius: 7px;
   background: #f7f9f1;
   border: 1px solid #eaf0df;
-  font-size: 11px;
+  font-size: 15px;
   color: #68766d;
 }
 .settings-save {
@@ -1774,7 +1774,7 @@
   gap: 12px;
 }
 .settings-save .muted {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
 }
 .settings-save .page-form-error {
@@ -1798,24 +1798,24 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 18px;
-  font-size: 17px;
+  font-size: 19px;
   letter-spacing: 1px;
   color: #68766d;
 }
 .profile-card h3 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 550;
   color: #6a8550;
   margin: 0 0 7px;
 }
 .profile-card p {
-  font-size: 10px;
+  font-size: 13px;
   color: #68766d;
   margin: 0 0 17px;
   overflow-wrap: anywhere;
 }
 .profile-card .subtle-pill {
-  font-size: 8px;
+  font-size: 13px;
   color: #68766d;
   background: #f8faf4;
   border-color: #e9f0e0;
@@ -1828,14 +1828,14 @@
   margin-bottom: 18px;
 }
 .settings-info h3 {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   color: #68766d;
   margin: 0 0 10px;
   font-weight: 500;
 }
 .settings-info p {
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.9;
   color: #68766d;
   margin: 0;
@@ -1847,7 +1847,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
 }
 .settings-info .status-dot {
@@ -1868,7 +1868,7 @@
   margin-top: 2px;
 }
 .settings-source p {
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.7;
   margin: 0;
   color: #68766d;
@@ -1877,7 +1877,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 9px;
+  font-size: 13px;
   color: #68766d;
   text-decoration: none;
   margin-top: 7px;
@@ -2054,7 +2054,7 @@
     padding: 0 17px;
   }
   .business-tabs > button {
-    font-size: 11px;
+    font-size: 15px;
     padding: 17px 0 14px;
   }
   .table-bottom {
@@ -2076,18 +2076,18 @@
     margin-bottom: 13px;
   }
   .small-stat p {
-    font-size: 9px;
+    font-size: 13px;
   }
   .small-stat strong {
     font-size: 20px;
     letter-spacing: -0.6px;
   }
   .small-stat strong > small {
-    font-size: 8px;
+    font-size: 13px;
     margin-left: 4px;
   }
   .stat-footnote {
-    font-size: 8px;
+    font-size: 13px;
   }
   .production-grid {
     grid-template-columns: 1fr;
@@ -2129,7 +2129,7 @@
     margin: 0;
   }
   .quote-actions .button {
-    font-size: 9px;
+    font-size: 13px;
     padding: 8px 7px;
   }
   .quality-banner {
@@ -2137,17 +2137,17 @@
     gap: 12px;
   }
   .quality-banner h3 {
-    font-size: 12px;
+    font-size: 15px;
   }
   .quality-banner p {
-    font-size: 10px;
+    font-size: 13px;
   }
   .quality-banner > span {
     font-size: 23px;
   }
   .quality-banner > span > small {
     max-width: 75px;
-    font-size: 8px;
+    font-size: 13px;
     line-height: 1.5;
   }
   .quality-banner-icon {
@@ -2157,10 +2157,10 @@
     padding: 20px;
   }
   .inspection-detail-header h2 {
-    font-size: 16px;
+    font-size: 18px;
   }
   .inspection-detail-header > .button {
-    font-size: 9px;
+    font-size: 13px;
     white-space: nowrap;
   }
   .inspection-section-title {
@@ -2192,7 +2192,7 @@
     font-size: 20px;
   }
   .library-feature p {
-    font-size: 10px;
+    font-size: 13px;
   }
   .library-floating-part {
     width: 100px;
@@ -2203,7 +2203,7 @@
     width: 48px;
   }
   .library-verified {
-    font-size: 7px;
+    font-size: 13px;
     padding: 6px;
     right: -7px;
     top: 1px;
@@ -2214,10 +2214,10 @@
     bottom: 5px;
   }
   .library-part-count > small {
-    font-size: 8px;
+    font-size: 13px;
   }
   .private-library {
-    font-size: 9px;
+    font-size: 13px;
   }
   .library-toolbar {
     flex-wrap: wrap;
@@ -2233,7 +2233,7 @@
     padding: 16px;
   }
   .part-card h3 {
-    font-size: 12px;
+    font-size: 15px;
   }
   .part-card-visual {
     height: 150px;
@@ -2242,13 +2242,13 @@
     flex-wrap: wrap;
   }
   .part-card-actions .button {
-    font-size: 9px;
+    font-size: 13px;
     flex: 1;
     justify-content: center;
   }
   .part-record-meta {
     flex-wrap: wrap;
-    font-size: 8px;
+    font-size: 13px;
   }
   .economics-grid {
     gap: 10px;
@@ -2258,10 +2258,10 @@
     font-size: 21px;
   }
   .economics-grid small {
-    font-size: 8px;
+    font-size: 13px;
   }
   .economics-grid > div > span {
-    font-size: 9px;
+    font-size: 13px;
   }
   .workflow-explainer {
     grid-template-columns: 1fr;
@@ -2293,7 +2293,7 @@
     flex-wrap: wrap;
   }
   .approval-summary > strong {
-    font-size: 18px;
+    font-size: 20px;
   }
   .improvement-card {
     padding: 18px;
@@ -2302,10 +2302,10 @@
     align-items: flex-start;
   }
   .section-heading .subtle-pill {
-    font-size: 8px;
+    font-size: 13px;
   }
   .section-heading h2 {
-    font-size: 15px;
+    font-size: 17px;
   }
 }
 @media (max-width: 480px) {
@@ -2317,14 +2317,14 @@
     padding: 14px 10px;
   }
   .small-stat strong {
-    font-size: 17px;
+    font-size: 19px;
   }
   .small-stat strong > small {
     display: block;
     margin: 6px 0 0;
   }
   .small-stat .stat-footnote {
-    font-size: 7px;
+    font-size: 13px;
   }
   .small-stat p {
     min-height: 24px;
@@ -2349,20 +2349,20 @@
     gap: 10px;
   }
   .machine-card-top .badge {
-    font-size: 8px;
+    font-size: 13px;
   }
   .machine-card h3 {
-    font-size: 12px;
+    font-size: 15px;
   }
   .machine-card > p {
     line-height: 1.6;
     min-height: 28px;
   }
   .machine-qualification {
-    font-size: 8px;
+    font-size: 13px;
   }
   .manual-note {
-    font-size: 7px;
+    font-size: 13px;
     line-height: 1.6;
   }
   .library-feature {
@@ -2386,22 +2386,22 @@
   }
   .part-card-actions .button {
     flex: none;
-    font-size: 10px;
+    font-size: 13px;
   }
   .part-card h3 {
-    font-size: 14px;
+    font-size: 16px;
   }
   .part-record-meta {
-    font-size: 9px;
+    font-size: 13px;
   }
   .improvement-grid {
     gap: 12px;
   }
   .improvement-card h3 {
-    font-size: 12px;
+    font-size: 15px;
   }
   .improvement-card p {
-    font-size: 9px;
+    font-size: 13px;
   }
   .form-columns {
     grid-template-columns: 1fr;
@@ -2437,22 +2437,22 @@
     font-size: 19px;
   }
   .business-modal .modal-footer > .button {
-    font-size: 11px;
+    font-size: 15px;
   }
   .capacity-display > strong {
     font-size: 44px;
   }
   .capacity-display > span {
-    font-size: 9px;
+    font-size: 13px;
   }
   .panel-heading {
     padding: 20px;
   }
   .panel-heading h3 {
-    font-size: 13px;
+    font-size: 15px;
   }
   .panel-heading .assumption-label {
-    font-size: 8px;
+    font-size: 13px;
   }
   .economics-grid strong {
     font-size: 19px;
@@ -2468,10 +2468,10 @@
     flex: 1;
   }
   .page-note {
-    font-size: 10px;
+    font-size: 13px;
   }
   .table-bottom {
-    font-size: 9px;
+    font-size: 13px;
   }
 }
 /* CSS shapes provide a quiet visual cue until a real case attachment is available. */
@@ -2479,7 +2479,7 @@
   position: absolute;
   left: 14px;
   bottom: 13px;
-  font-size: 8px;
+  font-size: 13px;
   color: #68766d;
 }
 @media (prefers-reduced-motion: reduce) {

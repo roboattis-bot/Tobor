@@ -1,29 +1,10 @@
-import { lazy, Suspense, useState } from 'react';
-import {
-  ArrowDownLeft,
-  ArrowRight,
-  ArrowUpRight,
-  Box,
-  Check,
-  ChevronRight,
-  CircleCheck,
-  Clock3,
-  Layers3,
-  MoreHorizontal,
-  Plus,
-  Printer,
-  ScanLine,
-  Wrench,
-} from 'lucide-react';
-import { dateLabel, money, statusLabels } from './api';
-import type { DashboardData, Page, User } from '../shared/types';
-const PrinterScene = lazy(() => import('./PrinterScene'));
-const serviceLabels: Record<string, string> = {
-  custom: 'Custom part',
-  replacement: 'Replacement',
-  repair: 'Robot repair',
-  repeat: 'Repeat order',
-};
+import { ArrowRight, ArrowUpRight, Check, ChevronRight, Plus, RotateCcw } from 'lucide-react';
+import { dateLabel, statusLabels } from './api';
+import type { DashboardData, Page, ServiceType, User } from '../shared/types';
+import { ModelView } from './ModelScene';
+import { journey, journeyIndex, nextStep, serviceOptions } from './workflow';
+import type { ModelKind } from './models/types';
+
 export default function Dashboard({
   data,
   user,
@@ -35,398 +16,277 @@ export default function Dashboard({
   user: User;
   navigate: (page: Page) => void;
   onOpenCase: (id: number) => void;
-  onNewCase: () => void;
+  onNewCase: (service?: ServiceType) => void;
 }) {
-  const [period, setPeriod] = useState(14);
-  const active = data.cases.filter((c) => c.status !== 'delivered');
-  const printing = data.machines.filter((m) => m.status === 'printing').length;
-  const approval = data.cases.filter((c) => c.status === 'approval').length;
-  const delivered = data.cases.filter((c) => c.status === 'delivered');
-  const qc = data.qualityChecks.filter((c) => c.passed !== null),
-    passed = qc.filter((c) => c.passed).length;
-  const cards = [
-    {
-      label: 'Active cases',
-      value: active.length.toString(),
-      foot: `${data.cases.filter((c) => c.status === 'intake').length} new requests to review`,
-      icon: Layers3,
-      className: 'purple',
-    },
-    {
-      label: 'Printers in production',
-      value: printing.toString(),
-      suffix: `/ ${data.machines.length}`,
-      foot: `${data.machines.filter((m) => m.status === 'idle').length} available for your next job`,
-      icon: Printer,
-      className: 'green',
-    },
-    {
-      label: 'Awaiting approval',
-      value: approval.toString(),
-      foot: 'Keep the next stage moving',
-      icon: Clock3,
-      className: 'orange',
-    },
-    {
-      label: 'Quality checks passed',
-      value: qc.length ? Math.round((passed / qc.length) * 100) + '%' : '—',
-      foot: `${passed} of ${qc.length} recorded checks`,
-      icon: ScanLine,
-      className: 'blue',
-    },
+  const active = data.cases.filter((item) => item.status !== 'delivered');
+  const priority = [
+    'blocked',
+    'quality',
+    'ready',
+    'approval',
+    'intake',
+    'assessment',
+    'production',
   ];
-  const stages = [
-    { id: 'intake', name: 'Intake', color: '#b8aedc' },
-    { id: 'assessment', name: 'Assessment', color: '#f1c690' },
-    { id: 'approval', name: 'Approval', color: '#d9d0ac' },
-    { id: 'production', name: 'Production', color: '#8aafa0' },
-    { id: 'quality', name: 'Quality check', color: '#aabd93' },
-    { id: 'ready', name: 'Ready', color: '#466d52' },
-  ];
-  const chartDays = Array.from({ length: period }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - (period - 1 - i));
-    const key = d.toISOString().slice(0, 10);
-    return {
-      key,
-      label: d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
-      created: data.cases.filter((c) => c.createdAt.slice(0, 10) === key).length,
-      delivered: data.cases.filter(
-        (c) => c.status === 'delivered' && c.updatedAt.slice(0, 10) === key,
-      ).length,
-    };
-  });
-  const chartMax = Math.max(3, ...chartDays.map((d) => d.created));
-  const points = chartDays
-    .map((d, i) => `${42 + i * (690 / (period - 1))},${154 - (d.created / chartMax) * 114}`)
-    .join(' ');
-  const completedPoints = chartDays
-    .map((d, i) => `${42 + i * (690 / (period - 1))},${154 - (d.delivered / chartMax) * 114}`)
-    .join(' ');
+  const attention = [...active]
+    .sort(
+      (a, b) =>
+        priority.indexOf(a.status) - priority.indexOf(b.status) ||
+        (a.dueDate || '9999').localeCompare(b.dueDate || '9999'),
+    )
+    .slice(0, 3);
+  const recent = [...data.cases].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)).slice(0, 4);
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const stats: { label: string; value: number; text: string; model: ModelKind; page: Page }[] = [
+    {
+      label: 'Open requests',
+      value: active.length,
+      text: 'Jobs we are still working on',
+      model: 'blueprint',
+      page: 'cases',
+    },
+    {
+      label: 'Need approval',
+      value: data.cases.filter((item) => item.status === 'approval').length,
+      text: 'Waiting for the design or price to be agreed',
+      model: 'receipt',
+      page: 'quotes',
+    },
+    {
+      label: 'Ready to send',
+      value: data.cases.filter((item) => item.status === 'ready').length,
+      text: 'Checked and ready for delivery',
+      model: 'parcel',
+      page: 'cases',
+    },
+    {
+      label: 'Jobs delivered',
+      value: data.cases.filter((item) => item.status === 'delivered').length,
+      text: 'Finished items received by customers',
+      model: 'check',
+      page: 'cases',
+    },
+  ];
   return (
-    <>
-      <div className="page-heading">
+    <div className="simple-home">
+      <div className="page-heading home-heading">
         <div>
-          <div className="eyebrow">A LITTLE CLARITY FOR YOUR DAY</div>
+          <p className="eyebrow">YOUR WORKSHOP, ONE CLEAR STEP AT A TIME</p>
           <h1>
             {greeting}, {user.name.split(' ')[0]} <span className="greeting-sun">✳</span>
           </h1>
-          <p>Here’s what’s happening across your workshop.</p>
+          <p>Start a request or see what needs your attention.</p>
         </div>
-        <button className="button primary" onClick={onNewCase}>
-          <Plus size={17} /> New request
-        </button>
       </div>
-      <div className="stats-grid">
-        {cards.map((card) => (
-          <div className="stat-card card" key={card.label}>
-            <div className="stat-top">
-              <span>{card.label}</span>
-              <span className={`stat-icon ${card.className}`}>
-                <card.icon size={18} />
-              </span>
-            </div>
-            <div className="stat-value">
-              {card.value}
-              <span>{card.suffix}</span>
-            </div>
-            <div className="stat-foot">
-              <span className="tiny-dot" />
-              {card.foot}
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="overview-main-grid">
-        <section className="card flow-card">
-          <div className="card-heading">
-            <div>
-              <h2>Workshop at a glance</h2>
-              <p>Every request, one step closer to ready.</p>
-            </div>
-            <button className="text-button" onClick={() => navigate('cases')}>
-              View pipeline <ArrowUpRight size={15} />
-            </button>
-          </div>
-          <div className="flow-stages">
-            {stages.map((s, i) => (
-              <button
-                key={s.id}
-                className="flow-stage"
-                onClick={() =>
-                  navigate(
-                    s.id === 'production' ? 'production' : s.id === 'quality' ? 'quality' : 'cases',
-                  )
-                }
-              >
-                <div className="stage-marker">
-                  <span style={{ background: s.color }}>{i + 1}</span>
-                  {i < stages.length - 1 && <div />}
-                </div>
-                <strong>
-                  {data.cases
-                    .filter((c) => c.status === s.id)
-                    .length.toString()
-                    .padStart(2, '0')}
-                </strong>
-                <span>{s.name}</span>
-              </button>
-            ))}
-          </div>
-          <div className="chart-heading">
-            <h3>Request activity</h3>
-            <select
-              aria-label="Activity period"
-              value={period}
-              onChange={(e) => setPeriod(Number(e.target.value))}
-            >
-              <option value={14}>Last 14 days</option>
-              <option value={7}>Last 7 days</option>
-              <option value={30}>Last 30 days</option>
-            </select>
-          </div>
-          <div className="activity-chart">
-            <svg
-              viewBox="0 0 760 190"
-              role="img"
-              aria-label={`New and delivered requests in the last ${period} days. ${chartDays.reduce((s, d) => s + d.created, 0)} new requests.`}
-            >
-              <defs>
-                <linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#85a994" stopOpacity=".22" />
-                  <stop offset="100%" stopColor="#85a994" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              {[0, 1, 2, 3].map((i) => (
-                <g key={i}>
-                  <line
-                    x1="42"
-                    x2="734"
-                    y1={40 + i * 38}
-                    y2={40 + i * 38}
-                    stroke="#eef0ee"
-                    strokeDasharray="4 5"
-                  />
-                  <text x="14" y={44 + i * 38} fontSize="10" fill="#8d9590">
-                    {Math.round(chartMax * (1 - i / 3))}
-                  </text>
-                </g>
-              ))}
-              <polygon points={`42,154 ${points} 732,154`} fill="url(#chart-fill)" />
-              <polyline
-                points={points}
-                fill="none"
-                stroke="#35694c"
-                strokeWidth="2.5"
-                strokeLinejoin="round"
-              />
-              <polyline
-                points={completedPoints}
-                fill="none"
-                stroke="#a7b57c"
-                strokeWidth="2"
-                strokeDasharray="5 4"
-              />
-              {chartDays.map((d, i) =>
-                i % Math.max(1, Math.ceil(period / 6)) === 0 || i === period - 1 ? (
-                  <text
-                    key={d.key}
-                    x={42 + i * (690 / (period - 1))}
-                    y="181"
-                    textAnchor="middle"
-                    fontSize="10"
-                    fill="#8d9590"
-                  >
-                    {d.label}
-                  </text>
-                ) : null,
-              )}
-            </svg>
-          </div>
-          <div className="chart-legend">
-            <span>
-              <i /> New requests
-            </span>
-            <span>
-              <i /> Delivered
-            </span>
-            <span className="chart-note">
-              {data.settings.demoMode
-                ? 'Based on sample case history'
-                : 'Based on recorded case history'}
-            </span>
-          </div>
-        </section>
-        <section className="workshop-card">
-          <div className="workshop-card-top">
-            <span className="workshop-kicker">
-              <span className="live-dot" /> MADE POSSIBLE, TOGETHER
-            </span>
-            <span className="three-badge">3D VIEW</span>
-          </div>
+      <section className="welcome-scene">
+        <div className="welcome-copy">
+          <span className="welcome-label">
+            <span className="live-dot" /> THIS IS TOBOR
+          </span>
           <h2>
-            Your next idea.
+            Make it.
             <br />
-            Already taking shape.
+            Fix it. <em>Use it again.</em>
           </h2>
           <p>
-            One connected workspace.
-            <br />A world of things you can make.
+            Make new parts, replace broken ones, and repair devices. We keep the request, the price,
+            and the progress together.
           </p>
-          <Suspense fallback={<div className="scene-loading" />}>
-            <PrinterScene />
-          </Suspense>
-          <div className="workshop-card-bottom">
-            <span>
-              <Box size={16} /> The Tobor workshop
-            </span>
-            <button aria-label="Explore production" onClick={() => navigate('production')}>
-              <ArrowUpRight size={19} />
+          <div className="welcome-actions">
+            <button className="button primary" onClick={() => onNewCase()}>
+              <Plus size={19} /> New request
+            </button>
+            <button
+              className="button ghost"
+              onClick={() =>
+                document.getElementById('how-it-works')?.scrollIntoView({
+                  behavior: matchMedia('(prefers-reduced-motion: reduce)').matches
+                    ? 'auto'
+                    : 'smooth',
+                  block: 'start',
+                })
+              }
+            >
+              How it works <ArrowRight size={17} />
             </button>
           </div>
-        </section>
-      </div>
-      <div className="overview-lower-grid">
-        <section className="card recent-card">
-          <div className="card-heading">
+        </div>
+        <div className="welcome-art">
+          <span className="art-label">AN IDEA → A WORKING PART</span>
+          <ModelView
+            kind="workshop"
+            hero
+            label="3D illustration of a printer, repair robot, gear, and delivery box"
+          />
+          <span className="art-caption">Workshop illustrations · not live machine readings</span>
+        </div>
+      </section>
+      <section className="home-section" aria-labelledby="start-heading">
+        <div className="simple-section-heading">
+          <div>
+            <h2 id="start-heading">What would you like to do?</h2>
+            <p>Choose a starting point. We will guide you through the details.</p>
+          </div>
+        </div>
+        <div className="service-action-grid">
+          {serviceOptions.map((service) => (
+            <button
+              className="service-action card"
+              key={service.id}
+              onClick={() => onNewCase(service.id)}
+            >
+              <ModelView kind={service.model} />
+              <div>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+              </div>
+              <ArrowUpRight className="service-arrow" size={20} />
+            </button>
+          ))}
+          <button className="service-action card repeat-action" onClick={() => navigate('library')}>
+            <ModelView kind="library" />
             <div>
-              <h2>
-                Recent cases <span className="count-pill">{data.cases.length}</span>
-              </h2>
-              <p>Small details. Real progress.</p>
+              <h3>Order it again</h3>
+              <p>Find a saved part and request another batch.</p>
             </div>
-            <button className="text-button" onClick={() => navigate('cases')}>
-              View all cases <ArrowRight size={15} />
-            </button>
-          </div>
-          <div className="table-scroll">
-            <table className="cases-table">
-              <thead>
-                <tr>
-                  <th>CASE / CUSTOMER</th>
-                  <th>SERVICE</th>
-                  <th>STATUS</th>
-                  <th>DUE DATE</th>
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {[...data.cases]
-                  .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
-                  .slice(0, 5)
-                  .map((c) => (
-                    <tr key={c.id}>
-                      <td>
-                        <button className="case-title-button" onClick={() => onOpenCase(c.id)}>
-                          <span className={`case-service-icon ${c.service}`}>
-                            {c.service === 'repair' ? (
-                              <Wrench size={17} />
-                            ) : c.service === 'custom' ? (
-                              <Layers3 size={17} />
-                            ) : (
-                              <Box size={17} />
-                            )}
-                          </span>
-                          <span>
-                            <strong>{c.title}</strong>
-                            <small>
-                              {c.reference} <span>·</span> {c.customer}
-                            </small>
-                          </span>
-                        </button>
-                      </td>
-                      <td>
-                        <span className="table-service">{serviceLabels[c.service]}</span>
-                      </td>
-                      <td>
-                        <span className={`badge ${c.status}`}>
-                          <i />
-                          {statusLabels[c.status]}
-                        </span>
-                      </td>
-                      <td className="table-date">{dateLabel(c.dueDate)}</td>
-                      <td>
-                        <button
-                          className="icon-button"
-                          aria-label={`Open ${c.reference}`}
-                          onClick={() => onOpenCase(c.id)}
-                        >
-                          <ChevronRight size={16} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-            {!data.cases.length && (
-              <div className="empty-state">
-                <Box />
-                <h3>A clear workbench.</h3>
-                <p>Create your first request to get started.</p>
-                <button className="button primary" onClick={onNewCase}>
-                  New request
-                </button>
-              </div>
-            )}
-          </div>
-          <div className="table-footer">
-            <span>
-              <span className="tiny-dot" /> {active.length} cases moving through your workshop
-            </span>
-            <span>One accountable service.</span>
-          </div>
-        </section>
-        <section className="card activity-card">
-          <div className="card-heading">
-            <h2>Workshop updates</h2>
-            <span className="activity-live">RECENT</span>
-          </div>
-          <div className="activity-list">
-            {data.activities.slice(0, 4).map((a, i) => (
-              <div className="activity-item" key={a.id}>
-                <div className={`activity-symbol symbol-${i % 4}`}>
-                  {i % 3 === 0 ? (
-                    <Check size={14} />
-                  ) : i % 3 === 1 ? (
-                    <Box size={14} />
-                  ) : (
-                    <ArrowDownLeft size={14} />
-                  )}
-                </div>
-                <div>
-                  <p>{a.message}</p>
-                  <span>
-                    {a.actor} <b>·</b> {dateLabel(a.createdAt)}
-                  </span>
-                  {a.caseId && (
-                    <button className="activity-link" onClick={() => onOpenCase(a.caseId!)}>
-                      Open case <ArrowUpRight size={11} />
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-            {!data.activities.length && <p className="muted">Case updates will appear here.</p>}
-          </div>
-          <button className="activity-bottom" onClick={() => navigate('production')}>
-            <span>
-              <Printer size={16} /> Explore your factory floor
-            </span>
-            <ArrowRight size={15} />
+            <RotateCcw className="service-arrow" size={20} />
           </button>
-        </section>
+        </div>
+      </section>
+      <section className="stats-grid simple-stats" aria-label="Your work at a glance">
+        {stats.map((stat) => (
+          <button className="stat-card card" key={stat.label} onClick={() => navigate(stat.page)}>
+            <div className="simple-stat-copy">
+              <span>{stat.label}</span>
+              <strong>{stat.value}</strong>
+              <p>{stat.text}</p>
+            </div>
+            <ModelView kind={stat.model} />
+          </button>
+        ))}
+      </section>
+      <section className="home-section" aria-labelledby="next-heading">
+        <div className="simple-section-heading">
+          <div>
+            <span className="eyebrow">A GOOD PLACE TO START</span>
+            <h2 id="next-heading">What needs to happen next?</h2>
+            <p>Open a job to see its details and take the next step.</p>
+          </div>
+          <button className="text-button" onClick={() => navigate('cases')}>
+            All requests <ArrowRight size={17} />
+          </button>
+        </div>
+        <div className="next-actions">
+          {attention.length ? (
+            attention.map((item) => {
+              const task = nextStep(item);
+              return (
+                <article className="next-action card" key={item.id}>
+                  <span className={`badge ${item.status}`}>
+                    <i />
+                    {statusLabels[item.status]}
+                  </span>
+                  <h3>{task.title}</h3>
+                  <button className="next-job-title" onClick={() => onOpenCase(item.id)}>
+                    {item.title}
+                  </button>
+                  <p>{task.text}</p>
+                  <div className="next-action-bottom">
+                    <span>{item.customer}</span>
+                    <button className="button secondary small" onClick={() => onOpenCase(item.id)}>
+                      Open request <ArrowRight size={16} />
+                    </button>
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <div className="card simple-empty">
+              <Check size={26} />
+              <h3>You are all caught up.</h3>
+              <p>New requests will appear here when they need a next step.</p>
+            </div>
+          )}
+        </div>
+      </section>
+      <section className="journey-section" id="how-it-works" aria-labelledby="journey-heading">
+        <div className="simple-section-heading">
+          <div>
+            <span className="eyebrow">NO WORKSHOP EXPERIENCE NEEDED</span>
+            <h2 id="journey-heading">From a request to something ready to use.</h2>
+            <p>Every job follows these five simple steps.</p>
+          </div>
+        </div>
+        <ol className="journey-grid">
+          {journey.map((step, index) => (
+            <li key={step.title}>
+              <div className="journey-art">
+                <ModelView kind={step.model} />
+                <span>{index + 1}</span>
+              </div>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+            </li>
+          ))}
+        </ol>
+        <p className="journey-footnote">
+          Not sure about a size or material? Add what you know. The team reviews the details before
+          any work starts.
+        </p>
+      </section>
+      <section className="home-section" aria-labelledby="recent-heading">
+        <div className="simple-section-heading">
+          <div>
+            <h2 id="recent-heading">Your recent requests</h2>
+            <p>See where each job is and what comes next.</p>
+          </div>
+          <button className="text-button" onClick={() => navigate('cases')}>
+            See all requests <ArrowRight size={17} />
+          </button>
+        </div>
+        <div className="simple-recent card">
+          {recent.map((item) => {
+            const step = journeyIndex(item.status);
+            return (
+              <button
+                className="simple-request-row"
+                key={item.id}
+                onClick={() => onOpenCase(item.id)}
+              >
+                <div className="simple-request-title">
+                  <strong>{item.title}</strong>
+                  <span>
+                    {item.reference} · {item.customer}
+                  </span>
+                </div>
+                <div className="request-progress">
+                  <span className={`badge ${item.status}`}>{statusLabels[item.status]}</span>
+                  <span className="mini-progress" aria-hidden="true">
+                    {journey.map((stage, i) => (
+                      <i key={stage.title} className={i <= step ? 'complete' : ''} />
+                    ))}
+                  </span>
+                </div>
+                <span className="request-date">
+                  {item.dueDate ? `Due ${dateLabel(item.dueDate)}` : 'No due date yet'}
+                </span>
+                <ChevronRight size={19} />
+              </button>
+            );
+          })}
+          {!recent.length && <p className="simple-empty">Your first request will appear here.</p>}
+        </div>
+      </section>
+      <div className="home-report-link">
+        <div>
+          <strong>Want to understand the costs and workload?</strong>
+          <p>Reports keep the detailed numbers in one place.</p>
+        </div>
+        <button className="button secondary" onClick={() => navigate('insights')}>
+          View reports <ArrowRight size={17} />
+        </button>
       </div>
-      <div className="dashboard-footer">
-        <span>
-          <span className="mini-brand">t.</span> Thoughtfully made. Carefully verified.
-        </span>
-        <span>
-          {delivered.length} delivered cases <span>·</span>{' '}
-          {money(delivered.reduce((s, c) => s + c.amount, 0))} delivered value
-        </span>
-      </div>
-    </>
+    </div>
   );
 }

@@ -26,9 +26,11 @@ export default function Modal({
     const key = (event: KeyboardEvent) => {
       if (event.key === 'Escape') closeRef.current();
       if (event.key === 'Tab') {
-        const focusables = panel.current?.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]',
-        );
+        const focusables = [
+          ...(panel.current?.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]',
+          ) || []),
+        ].filter((element) => element.getClientRects().length > 0);
         if (!focusables?.length) return;
         const first = focusables[0],
           last = focusables[focusables.length - 1];

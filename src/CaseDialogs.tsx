@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   ArrowRight,
   Box,
@@ -17,211 +17,310 @@ import {
 import type { CaseRecord, CaseStatus, DashboardData, ServiceType } from '../shared/types';
 import { api, dateLabel, money, statusLabels } from './api';
 import Modal from './Modal';
+import { nextStep, serviceOptions } from './workflow';
 type Notify = (message: string, kind?: 'success' | 'error') => void;
 export function NewCaseModal({
   onClose,
   onCreated,
   notify,
+  initialService = 'custom',
 }: {
   onClose: () => void;
   onCreated: (id: number) => Promise<void>;
   notify: Notify;
+  initialService?: ServiceType;
 }) {
-  const [service, setService] = useState<ServiceType>('custom'),
+  const [service, setService] = useState<ServiceType>(
+    initialService === 'repeat' ? 'custom' : initialService,
+  );
+  const [step, setStep] = useState(0),
     [busy, setBusy] = useState(false),
     [error, setError] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
+  const steps = ['Your request', 'About the item', 'Timing & quantity'];
+  const goTo = (index: number) => {
+    setStep(index);
+    setError('');
+    requestAnimationFrame(() => {
+      formRef.current?.querySelector('.modal-body')?.scrollTo({ top: 0 });
+      formRef.current?.querySelector<HTMLElement>(`[data-step="${index}"] h3`)?.focus();
+    });
+  };
+  const validateStep = (index: number) => {
+    const fields = formRef.current?.querySelectorAll<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >(
+      `[data-step="${index}"] input, [data-step="${index}"] select, [data-step="${index}"] textarea`,
+    );
+    const invalid = [...(fields || [])].find((field) => !field.checkValidity());
+    if (!invalid) return true;
+    goTo(index);
+    setError('Please complete the highlighted field.');
+    requestAnimationFrame(() => {
+      invalid.focus();
+      invalid.reportValidity();
+    });
+    return false;
+  };
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!validateStep(step)) return;
+    if (step < 2) {
+      goTo(step + 1);
+      return;
+    }
+    if (![0, 1, 2].every(validateStep)) return;
     const form = new FormData(event.currentTarget);
-    const body = Object.fromEntries(form);
     setBusy(true);
     setError('');
     try {
       const result = await api<CaseRecord>('/cases', {
         method: 'POST',
         body: JSON.stringify({
-          ...body,
+          ...Object.fromEntries(form),
           service,
           quantity: Number(form.get('quantity')),
           owner: 'Unassigned',
         }),
       });
-      notify('Request created. Ready for your engineering assessment.');
+      notify('Request saved. Next, the team will review the details.');
       await onCreated(result.id);
-    } catch (e) {
-      setError((e as Error).message);
+    } catch (error) {
+      setError((error as Error).message);
     } finally {
       setBusy(false);
     }
   }
   return (
     <Modal
-      title="Let’s make something happen."
-      subtitle="Start with what you need. We’ll keep the details together."
+      title="Start a new request"
+      subtitle="Three short steps. You do not need to know all the technical details."
       onClose={onClose}
       wide
+      className="request-wizard"
     >
-      <form onSubmit={submit}>
-        <div className="modal-body">
-          <div className="service-picker">
-            {[
-              {
-                id: 'custom',
-                label: 'Make a part',
-                desc: 'An idea, ready to take shape',
-                icon: Layers3,
-              },
-              {
-                id: 'replacement',
-                label: 'Replace a part',
-                desc: 'Give something a second life',
-                icon: Box,
-              },
-              {
-                id: 'repair',
-                label: 'Repair a device',
-                desc: 'Get supported equipment working',
-                icon: Wrench,
-              },
-            ].map((s) => (
+      <form
+        ref={formRef}
+        onSubmit={submit}
+        noValidate
+        onFocusCapture={(event) => {
+          if (event.target.matches('input, select, textarea')) {
+            event.target.closest('.field')?.scrollIntoView({ block: 'nearest' });
+          }
+        }}
+      >
+        <ol className="wizard-steps" aria-label="Request steps">
+          {steps.map((title, index) => (
+            <li key={title} className={index === step ? 'current' : index < step ? 'done' : ''}>
               <button
-                key={s.id}
                 type="button"
-                className={service === s.id ? 'selected' : ''}
-                aria-pressed={service === s.id}
-                onClick={() => setService(s.id as ServiceType)}
+                onClick={() => goTo(index)}
+                disabled={index > step || busy}
+                aria-current={index === step ? 'step' : undefined}
               >
-                <s.icon size={22} />
-                <strong>{s.label}</strong>
-                <span>{s.desc}</span>
-                {service === s.id && <Check size={14} className="service-check" />}
+                <span>{index < step ? <Check size={16} /> : index + 1}</span>
+                {title}
               </button>
-            ))}
-          </div>
-          <div className="form-grid">
-            <label className="field full">
-              Request title
-              <input
-                name="title"
-                placeholder={
-                  service === 'repair'
-                    ? 'e.g. Lab robot with intermittent sensor'
-                    : 'e.g. Custom sensor mounting bracket'
-                }
-                required
-                minLength={3}
-                maxLength={160}
-              />
-            </label>
-            <label className="field">
-              Customer / organization
-              <input name="customer" placeholder="e.g. Orbit Robotics" required maxLength={120} />
-            </label>
-            <label className="field">
-              Contact email
-              <input name="email" type="email" placeholder="name@company.com" maxLength={254} />
-            </label>
-            <label className="field full">
-              What do you need?
-              <textarea
-                name="description"
-                placeholder="Describe the problem, what failed, and the outcome you need."
-                rows={3}
-                required
-                maxLength={5000}
-              />
-            </label>
-            <label className="field full">
-              Intended use & environment
-              <textarea
-                name="intendedUse"
-                placeholder="Where will it be used? Include loads, temperature, exposure, and what could happen if it fails."
-                rows={2}
-                required
-                maxLength={3000}
-              />
-            </label>
-            <label className="field">
-              Dimensions & units
-              <input
-                name="dimensions"
-                placeholder="e.g. 60 × 40 × 5 mm, or sample needed"
-                maxLength={1000}
-              />
-            </label>
-            <label className="field">
-              Asset / device model
-              <input
-                name="asset"
-                placeholder="Model or serial number, if available"
-                maxLength={200}
-              />
-            </label>
-            <label className="field">
-              Quantity
-              <input name="quantity" type="number" min={1} max={10000} defaultValue={1} required />
-            </label>
-            <label className="field">
-              Preferred material
-              <select name="material" defaultValue="To be assessed">
-                <option>To be assessed</option>
-                <option>PLA</option>
-                <option>PETG</option>
-                <option>TPU</option>
-                <option>ASA</option>
-                <option>Nylon</option>
-                <option>Metal — partner</option>
-                <option>Electronics</option>
-              </select>
-            </label>
-            <label className="field">
-              Requested date
-              <input
-                name="dueDate"
-                type="date"
-                min={new Date().toISOString().slice(0, 10)}
-                required
-              />
-            </label>
-            <label className="field">
-              Priority
-              <select name="priority" defaultValue="normal">
-                <option value="normal">Normal</option>
-                <option value="high">High</option>
-                <option value="urgent">Urgent</option>
-              </select>
-            </label>
-            <label className="field full">
-              Consequence of failure
-              <select name="risk" defaultValue="review">
-                <option value="low">Noncritical accessory — low consequence</option>
-                <option value="review">Needs engineering assessment</option>
-                <option value="specialist">
-                  Safety / high energy / medical — specialist referral
-                </option>
-              </select>
-            </label>
-          </div>
-          <div className="info-callout">
-            <ShieldCheck size={19} />
-            <p>
-              Every request starts with assessment. An engineer verifies fit, scope, and capability
-              before anything goes into production. Attach drawings and photos after creating the
-              case.
+            </li>
+          ))}
+        </ol>
+        <div className="modal-body">
+          <fieldset data-step="0" hidden={step !== 0} className="wizard-fieldset">
+            <h3 tabIndex={-1}>What can we help you with?</h3>
+            <p className="wizard-intro">Choose the type of job and tell us what you need.</p>
+            <div className="service-picker">
+              {serviceOptions.map((option) => (
+                <button
+                  type="button"
+                  key={option.id}
+                  className={service === option.id ? 'selected' : ''}
+                  aria-pressed={service === option.id}
+                  onClick={() => setService(option.id)}
+                >
+                  <strong>{option.title}</strong>
+                  <span>{option.description}</span>
+                  {service === option.id && <Check size={16} className="service-check" />}
+                </button>
+              ))}
+            </div>
+            <div className="form-grid">
+              <label className="field full">
+                Request title
+                <input
+                  name="title"
+                  placeholder={serviceOptions.find((option) => option.id === service)?.example}
+                  required
+                  minLength={3}
+                  maxLength={160}
+                />
+              </label>
+              <label className="field full">
+                What do you need?
+                <textarea
+                  name="description"
+                  placeholder="Tell us what is broken or what you want to make. A few simple sentences are enough."
+                  rows={3}
+                  required
+                  maxLength={5000}
+                />
+              </label>
+              <label className="field">
+                Who is this for?
+                <input
+                  name="customer"
+                  placeholder="A person, team, or company"
+                  required
+                  maxLength={120}
+                />
+              </label>
+              <label className="field">
+                Contact email
+                <input
+                  name="email"
+                  aria-label="Contact email"
+                  aria-describedby="new-email-help"
+                  type="email"
+                  placeholder="name@company.com"
+                  maxLength={254}
+                />
+                <span className="field-help" id="new-email-help">
+                  Optional. Use the customer's contact email.
+                </span>
+              </label>
+            </div>
+          </fieldset>
+          <fieldset data-step="1" hidden={step !== 1} className="wizard-fieldset">
+            <h3 tabIndex={-1}>Tell us about the item</h3>
+            <p className="wizard-intro">
+              Add what you know. The team can help with measurements and materials.
             </p>
-          </div>
+            <div className="form-grid">
+              <label className="field full">
+                Where and how will it be used?
+                <textarea
+                  name="intendedUse"
+                  placeholder="For example: a holder on an indoor workbench, used to keep a small sensor in place."
+                  rows={3}
+                  required
+                  maxLength={3000}
+                />
+              </label>
+              <label className="field">
+                Size (if known)
+                <input
+                  name="dimensions"
+                  aria-label="Size (if known)"
+                  aria-describedby="new-size-help"
+                  placeholder="For example: 60 x 40 x 5 mm"
+                  maxLength={1000}
+                />
+                <span className="field-help" id="new-size-help">
+                  Leave blank if the item needs measuring.
+                </span>
+              </label>
+              <label className="field">
+                Device or model (if known)
+                <input name="asset" placeholder="Model name or number" maxLength={200} />
+              </label>
+              <label className="field">
+                Material (optional)
+                <select name="material" defaultValue="To be assessed">
+                  <option value="To be assessed">Let the team choose</option>
+                  <option>PLA</option>
+                  <option>PETG</option>
+                  <option>TPU</option>
+                  <option>ASA</option>
+                  <option>Nylon</option>
+                  <option value="Metal - partner">Metal (specialist)</option>
+                  <option>Electronics</option>
+                </select>
+              </label>
+              <label className="field">
+                What if the item fails?
+                <select name="risk" defaultValue="review">
+                  <option value="low">Low impact</option>
+                  <option value="review">Not sure - please check</option>
+                  <option value="specialist">Could cause harm</option>
+                </select>
+              </label>
+            </div>
+            <div className="info-callout">
+              <ShieldCheck size={20} />
+              <p>
+                Choose "Could cause harm" if failure may injure someone or damage equipment. A
+                specialist should review that work.
+              </p>
+            </div>
+          </fieldset>
+          <fieldset data-step="2" hidden={step !== 2} className="wizard-fieldset">
+            <h3 tabIndex={-1}>How many, and when?</h3>
+            <p className="wizard-intro">
+              Tell us your preferred timing. The team will confirm what is possible.
+            </p>
+            <div className="form-grid">
+              <label className="field">
+                How many?
+                <input
+                  name="quantity"
+                  type="number"
+                  min={1}
+                  max={10000}
+                  defaultValue={1}
+                  required
+                />
+              </label>
+              <label className="field">
+                When do you need it?
+                <input
+                  name="dueDate"
+                  type="date"
+                  min={new Date().toISOString().slice(0, 10)}
+                  required
+                />
+              </label>
+              <label className="field full">
+                How urgent is it?
+                <select name="priority" defaultValue="normal">
+                  <option value="normal">Normal</option>
+                  <option value="high">Important</option>
+                  <option value="urgent">Urgent</option>
+                </select>
+              </label>
+            </div>
+            <div className="request-review">
+              <span className="eyebrow">WHAT HAPPENS AFTER YOU SAVE?</span>
+              <h4>The team reviews your request.</h4>
+              <p>
+                You can add photos and drawings on the next screen. The design and price must be
+                agreed before work starts.
+              </p>
+            </div>
+          </fieldset>
           {error && (
             <div className="form-error" role="alert">
               {error}
             </div>
           )}
         </div>
-        <div className="modal-footer">
-          <button className="button secondary" type="button" onClick={onClose}>
-            Cancel
+        <div className="modal-footer wizard-footer">
+          <button
+            className="button secondary"
+            type="button"
+            onClick={() => (step ? goTo(step - 1) : onClose())}
+            disabled={busy}
+          >
+            {step ? 'Back' : 'Cancel'}
           </button>
+          <span>Step {step + 1} of 3</span>
           <button className="button primary" disabled={busy}>
-            {busy ? <LoaderCircle size={16} className="spin" /> : <Plus size={16} />} Create request
+            {busy ? (
+              <LoaderCircle size={17} className="spin" />
+            ) : step < 2 ? (
+              <ArrowRight size={17} />
+            ) : (
+              <Plus size={17} />
+            )}
+            {step === 0 ? 'Next: item details' : step === 1 ? 'Next: timing' : 'Create request'}
           </button>
         </div>
       </form>
@@ -307,6 +406,11 @@ export function CaseDetailModal({
         </span>
         <span className="muted">Due {dateLabel(record.dueDate)}</span>
         <span className={`priority-label ${record.priority}`}>{record.priority} priority</span>
+      </div>
+      <div className="request-next-step">
+        <span className="eyebrow">WHAT TO DO NEXT</span>
+        <h3>{nextStep(record).title}</h3>
+        <p>{nextStep(record).text}</p>
       </div>
       <div className="detail-tabs" role="tablist" aria-label="Case information">
         {['details', 'approvals', 'files', 'history'].map((t) => (

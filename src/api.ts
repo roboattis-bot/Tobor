@@ -32,11 +32,11 @@ export const dateLabel = (value: string) =>
     : 'Unscheduled';
 export const statusLabels: Record<string, string> = {
   intake: 'New request',
-  assessment: 'In assessment',
-  approval: 'Awaiting approval',
-  production: 'In production',
-  quality: 'Quality check',
-  ready: 'Ready to dispatch',
+  assessment: 'Being reviewed',
+  approval: 'Needs approval',
+  production: 'Being made or repaired',
+  quality: 'Final checks',
+  ready: 'Ready to send',
   delivered: 'Delivered',
   blocked: 'On hold',
   printing: 'Printing',

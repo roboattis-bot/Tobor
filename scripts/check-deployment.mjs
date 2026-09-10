@@ -54,10 +54,9 @@ try {
         await page.getByLabel('Password', { exact: true }).getAttribute('type'),
         'password',
       );
-      if (name === 'desktop')
-        await page
-          .locator('.auth-story .printer-scene canvas, .auth-story .printer-fallback')
-          .waitFor();
+      if (name === 'desktop') await page.locator('.auth-story .printer-scene').waitFor();
+      await page.locator('.model-canvas[data-status="ready"]').waitFor();
+      assert.equal(await page.locator('canvas').count(), 1, '3D views share one renderer');
       const fits = await page.evaluate(
         () => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
       );
@@ -69,6 +68,10 @@ try {
         await page.getByLabel('Password', { exact: true }).fill('test');
         await page.getByRole('button', { name: 'Sign in', exact: true }).click();
         await page.getByText('Workspace connected', { exact: true }).waitFor();
+        await page
+          .getByRole('heading', { name: 'What needs to happen next?', exact: true })
+          .waitFor();
+        await page.locator('.welcome-art [data-model-ready="true"]').waitFor();
         assert.match(await page.locator('.test-access-banner').innerText(), /Test access enabled/);
         const dashboardFits = await page.evaluate(
           () => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
@@ -78,6 +81,10 @@ try {
           path: `test-results/tobor-pi-test-dashboard-${name}.png`,
           fullPage: true,
         });
+        await page.getByRole('button', { name: 'New request', exact: true }).click();
+        const dialog = page.getByRole('dialog', { name: 'Start a new request', exact: true });
+        await dialog.getByLabel('Request title', { exact: true }).waitFor();
+        await dialog.getByRole('button', { name: 'Close dialog', exact: true }).click();
         if (name === 'mobile')
           await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
         await page.getByRole('button', { name: 'Sign out', exact: true }).click();

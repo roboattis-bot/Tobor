@@ -18,6 +18,8 @@ import {
   LogOut,
   Menu,
   Plus,
+  Pause,
+  Play,
   Search,
   Settings2,
   ShieldCheck,
@@ -25,22 +27,24 @@ import {
   Wrench,
   X,
 } from 'lucide-react';
-import type { AuthState, DashboardData, Page } from '../shared/types';
+import type { AuthState, DashboardData, Page, ServiceType } from '../shared/types';
 import { api, getAuth, getDashboard } from './api';
 import Auth, { Brand } from './Auth';
 import Dashboard from './Dashboard';
 import { WorkspacePage } from './WorkspacePages';
 import { CaseDetailModal, NewCaseModal } from './CaseDialogs';
 import Modal from './Modal';
+import { useModelMotion } from './ModelScene';
+import { journey } from './workflow';
 
 const navigation = [
-  { page: 'overview', label: 'Overview', icon: LayoutDashboard },
-  { page: 'cases', label: 'Cases & requests', icon: LayersIcon },
-  { page: 'production', label: 'Production', icon: Box },
-  { page: 'quotes', label: 'Quotes & approvals', icon: FileText },
-  { page: 'quality', label: 'Quality control', icon: ShieldCheck },
-  { page: 'library', label: 'Part library', icon: BookOpen },
-  { page: 'insights', label: 'Insights', icon: Activity },
+  { page: 'overview', label: 'Home', icon: LayoutDashboard },
+  { page: 'cases', label: 'Requests', icon: LayersIcon },
+  { page: 'quotes', label: 'Prices & approvals', icon: FileText },
+  { page: 'production', label: 'Make & repair', icon: Box },
+  { page: 'quality', label: 'Final checks', icon: ShieldCheck },
+  { page: 'library', label: 'Saved parts', icon: BookOpen },
+  { page: 'insights', label: 'Reports', icon: Activity },
 ] as const;
 function LayersIcon({ size = 18 }: { size?: number }) {
   return <FileCheck2 size={size} />;
@@ -61,6 +65,8 @@ function initialPage(): Page {
     : 'overview';
 }
 export default function App() {
+  const { motion, toggleMotion } = useModelMotion();
+  const [newService, setNewService] = useState<ServiceType>('custom');
   const [auth, setAuth] = useState<AuthState | null>(null),
     [data, setData] = useState<DashboardData | null>(null),
     [error, setError] = useState('');
@@ -69,6 +75,7 @@ export default function App() {
     [newCase, setNewCase] = useState(false),
     [caseId, setCaseId] = useState<number | null>(null);
   const [search, setSearch] = useState(''),
+    [mobileSearch, setMobileSearch] = useState(false),
     [searchFocused, setSearchFocused] = useState(false),
     [notifications, setNotifications] = useState(false),
     [help, setHelp] = useState(false),
@@ -86,16 +93,22 @@ export default function App() {
     setData(next);
     setError('');
   }, []);
+  const startNewRequest = (service: ServiceType = 'custom') => {
+    setNewService(service);
+    setNewCase(true);
+  };
   const navigate = useCallback((next: Page) => {
     setPage(next);
     location.hash = next;
     setMobileOpen(false);
+    setMobileSearch(false);
     window.scrollTo({ top: 0 });
   }, []);
   const openCase = useCallback((id: number) => {
     setCaseId(id);
     setSearch('');
     setSearchFocused(false);
+    setMobileSearch(false);
     setNotifications(false);
   }, []);
   useEffect(() => {
@@ -126,10 +139,12 @@ export default function App() {
     const key = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
-        searchRef.current?.focus();
+        setMobileSearch(true);
+        requestAnimationFrame(() => searchRef.current?.focus());
       }
       if (e.key === 'Escape') {
         setSearchFocused(false);
+        setMobileSearch(false);
         setNotifications(false);
         setMobileOpen(false);
       }
@@ -277,22 +292,12 @@ export default function App() {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <div className="sidebar-tip">
-            <span className="tip-icon">
-              <Sparkles size={18} />
-            </span>
-            <h3>A little better, every batch.</h3>
-            <p>Turn a verified part into your next effortless reorder.</p>
-            <button onClick={() => navigate('library')}>
-              Explore your part library <ArrowRight size={14} />
-            </button>
-          </div>
           <button
             className={`nav-item ${page === 'settings' ? 'active' : ''}`}
             onClick={() => navigate('settings')}
           >
             <Settings2 size={18} />
-            <span>Workspace settings</span>
+            <span>Settings</span>
           </button>
           <button className="nav-item" onClick={() => setHelp(true)}>
             <CircleHelp size={18} />
@@ -332,7 +337,28 @@ export default function App() {
             <strong>{currentNav?.label || 'Settings'}</strong>
           </div>
           <div className="topbar-actions">
-            <div className="global-search">
+            <button
+              className="motion-toggle"
+              onClick={toggleMotion}
+              aria-label={motion ? 'Pause 3D animation' : 'Play 3D animation'}
+              aria-pressed={!motion}
+            >
+              {motion ? <Pause size={16} /> : <Play size={16} />}
+              <span>{motion ? 'Pause 3D' : 'Play 3D'}</span>
+            </button>
+            <button
+              className="icon-button mobile-search-toggle"
+              aria-label="Search requests"
+              aria-expanded={mobileSearch}
+              aria-controls="workspace-search"
+              onClick={() => {
+                setMobileSearch(!mobileSearch);
+                if (!mobileSearch) requestAnimationFrame(() => searchRef.current?.focus());
+              }}
+            >
+              <Search size={19} />
+            </button>
+            <div id="workspace-search" className={`global-search ${mobileSearch ? 'is-open' : ''}`}>
               <Search size={16} />
               <input
                 ref={searchRef}
@@ -346,7 +372,7 @@ export default function App() {
               <kbd>⌘ K</kbd>
               {searchFocused && search && (
                 <div className="search-results">
-                  <div className="search-label">CASES & ASSETS</div>
+                  <div className="search-label">REQUESTS</div>
                   {matches.length ? (
                     matches.map((c) => (
                       <button
@@ -365,7 +391,7 @@ export default function App() {
                       </button>
                     ))
                   ) : (
-                    <p>No cases match “{search}”.</p>
+                    <p>No requests match “{search}”.</p>
                   )}
                 </div>
               )}
@@ -461,7 +487,7 @@ export default function App() {
               user={auth.user}
               navigate={navigate}
               onOpenCase={openCase}
-              onNewCase={() => setNewCase(true)}
+              onNewCase={startNewRequest}
             />
           ) : (
             <WorkspacePage
@@ -471,13 +497,14 @@ export default function App() {
               refresh={refresh}
               notify={notify}
               onOpenCase={openCase}
-              onNewCase={() => setNewCase(true)}
+              onNewCase={() => startNewRequest()}
             />
           )}
         </main>
       </div>
       {newCase && (
         <NewCaseModal
+          initialService={newService}
           notify={notify}
           onClose={() => setNewCase(false)}
           onCreated={async (id) => {
@@ -498,59 +525,34 @@ export default function App() {
       )}{' '}
       {help && (
         <Modal
-          title="One service. From problem to proven part."
-          subtitle="Built from your Tobor Product & Factory Blueprint · September 2026"
+          title="How Tobor works"
+          subtitle="From a broken part or a new idea to something ready to use."
           onClose={() => setHelp(false)}
         >
           <div className="modal-body help-body">
             <p>
-              Tobor turns a broken part, a new idea, or a supported device fault into a verified
-              working solution. A case owner keeps engineering, the customer, and the workshop
-              connected.
+              Tobor helps you make a new part, replace a broken one, or repair a supported device.
+              One request keeps the plan, price, progress, and checks together.
             </p>
-            {[
-              {
-                n: '01',
-                title: 'Understand the request',
-                text: 'Collect intended use, photos, dimensions, and the consequences of failure. Decide whether to source, make, repair, use a partner, or decline.',
-              },
-              {
-                n: '02',
-                title: 'Agree on the exact solution',
-                text: 'An engineer verifies the specification and releases a design revision. Record approval of the itemized quote before production.',
-              },
-              {
-                n: '03',
-                title: 'Make it. Measure it. Release it.',
-                text: 'Use a qualified process. Required dimensional and functional checks must pass before dispatch.',
-              },
-              {
-                n: '04',
-                title: 'Make the next one easier',
-                text: 'Keep verified parts and their revisions in a private library. Reorders confirm that interfaces, use, and design rights are unchanged.',
-              },
-            ].map((s) => (
-              <div className="help-step" key={s.n}>
-                <span>{s.n}</span>
+            {journey.map((step, index) => (
+              <div className="help-step" key={step.title}>
+                <span>{index + 1}</span>
                 <div>
-                  <h3>{s.title}</h3>
-                  <p>{s.text}</p>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
                 </div>
               </div>
             ))}
             <div className="info-callout">
-              <Sparkles size={20} />
+              <CircleHelp size={20} />
               <p>
-                Improve measurement and engineering capacity first. The plan’s illustrative CAD
-                workload nearly fills its available hours. More printers alone won’t solve that
-                bottleneck.
+                Start with what you know. The team can help confirm the size, material, and best
+                solution before the job starts.
               </p>
             </div>
             <p className="form-hint">
-              This pilot includes local records and sample equipment. Payment collection, courier
-              booking, physical printer telemetry, and automated CAD processing need separate
-              integrations. Read README.md and docs/TOBOR_GUIDE.md in this folder for setup and the
-              full improvement plan.
+              Sample records are marked on screen. Equipment status is updated by your team. The 3D
+              models explain the work; they do not control a machine.
             </p>
           </div>
           <div className="modal-footer">

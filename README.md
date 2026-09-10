@@ -31,13 +31,17 @@ Open **http://127.0.0.1:3001** or http://localhost:3001. Fastify serves the fron
 ## Your first workflow
 
 1. Sign in and review the labeled demonstration data. It is sample workshop activity, not live customer orders or printer telemetry.
-2. Create a request with the customer, service type, asset, intended use, dimensions, quantity and required date. Attach supporting photos or documents.
+2. Choose **Make a part**, **Replace a part**, or **Repair a device** on Home. The new-request form asks three short groups of questions: your request, the item, then timing and quantity. Unknown material or dimensions can be reviewed by the team. Attach supporting photos or documents after saving.
 3. Record assessment, route and the next owner. Use a blocked reason when information, approval or a spare is missing.
 4. Prepare an itemized quote and record the approved commercial and design state before production.
 5. Move work through production and quality. Enter actual results for the required quality checks before release.
 6. Find verified work in the part library and create a repeat request when the use and interfaces are unchanged.
 
-The sidebar provides Overview, Requests, Production, Quotes, Quality, Part library, Insights and Settings. CSV export supports offline review. The 3D workshop adds a visual view of the sample equipment; it does not send machine commands or display an uploaded part's CAD geometry.
+The sidebar provides **Home, Requests, Prices & approvals, Make & repair, Final checks, Saved parts, Reports, and Settings**. Home explains the five stages of a job, offers service shortcuts, and shows the next action for actual saved requests. Request cards and details explain what needs to happen next. Reports keep the detailed planning figures together; CSV export supports offline review.
+
+The original Tobor name and logo are preserved. Larger text, wrapping labels, responsive cards, and a scrollable form with a stationary action bar keep the interface readable on phones and desktop screens. The shared service and workflow definitions live in `src/workflow.ts`; the underlying API status identifiers and approval rules are unchanged.
+
+Procedural Three.js models include a printer, robot arm, gear, bracket, delivery box, checklist, quote, drawing, parts shelf, and combined workshop. They appear in the welcome scene, service cards, process guide, equipment cards, and saved-parts illustrations. These are illustrations, not machine readings or uploaded CAD previews.
 
 ## Configuration and stored data
 
@@ -79,6 +83,8 @@ SQLite's Node API executes synchronously and is a release candidate in Node 24.1
 
 The PDF proposes PostgreSQL and NestJS or the team's established backend stack. Fastify and local SQLite are a deliberate simplification for a runnable single-server pilot. They preserve a relational model and an API boundary that can be extended when the operation needs it. Vite 7 remains a supported line when using its current 7.3 release; the lockfile records the installed versions. [Vite support policy](https://vite.dev/releases)
 
+All 3D views share one lazy-loaded WebGL renderer and reusable geometry/materials. Only visible views render, at a maximum of 25 frames per second with a capped pixel ratio. The welcome scene responds to pointer movement and scrolling. Offscreen or hidden pages stop animating; the header's **Pause 3D** control remembers the user's preference, and operating-system reduced-motion settings also stop motion. Graphics failures leave simple icons and usable controls in place. Rendering runs in the visitor's browser, not on the Raspberry Pi.
+
 ## Verification
 
 ```powershell
@@ -91,9 +97,9 @@ The build checks TypeScript and creates the frontend bundle. Nine backend tests 
 
 Run `npm.cmd run benchmark` for a repeatable check against a disposable local database. On this machine (Node 24.18, Windows, Intel i5-12450HX), the sample workspace returned the complete 35,058-byte dashboard response in **6.926 ms median / 14.767 ms p95** over local HTTP. This used 10 warmups and 60 sequential authenticated requests, one concurrent client, local SQLite WAL, and 18 cases / 10 printers / 6 parts. It includes response download and excludes login hashing, browser rendering, TLS and remote network latency. It is a local baseline, not a production latency guarantee or load test.
 
-Validation completed: production build, **9 backend tests**, **4 browser workflow tests**, and **1 test-login browser test** pass. Browser checks cover desktop and mobile login, session revocation, saved cases and files, all eight modules, quote approval, quality release, and reviewed reorders. Screenshots are saved in `test-results/tobor-*.png`.
+Validation completed: production build, **9 backend tests**, **7 browser tests**, and **1 test-login browser test** pass. Browser checks cover login, mobile search, session revocation, the three-step request form, saved cases and files, all eight modules at 320/390/768/1024/1440 px widths, quote approval, quality release, reviewed reorders, shared 3D rendering, scrolling, pause persistence, reduced motion, graphics recovery, and missing-library fallbacks. Screenshots are saved in `test-results/tobor-*.png`.
 
-For the dedicated test-login browser check, set `E2E_TEST_LOGIN_EMAIL=test-access@example.test` in the test process and run `npm.cmd run test:e2e`. This selects the separate test-login scenario on a disposable database. Unset that variable afterward to run the normal four workflow tests. `TEST_LOGIN_EMAIL` is off by default in the application; when explicitly configured, the login page and dashboard show that the designated account accepts any nonempty password. Remove the setting and restart the API to restore normal login and revoke test sessions.
+For the dedicated test-login browser check, set `E2E_TEST_LOGIN_EMAIL=test-access@example.test` in the test process and run `npm.cmd run test:e2e`. This selects the separate test-login scenario on a disposable database. Unset that variable afterward to run the normal seven browser tests. `TEST_LOGIN_EMAIL` is off by default in the application; when explicitly configured, the login page and dashboard show that the designated account accepts any nonempty password. Remove the setting and restart the API to restore normal login and revoke test sessions.
 
 ## Back up and restore
 

@@ -33,16 +33,16 @@ The best route sometimes uses a purchased spare. Tobor earns from diagnosis, eng
 
 The application is an internal operating workspace for the local pilot. It connects the case, commercial record, production stage, quality result and part history so the team can see what must happen next.
 
-| Workspace    | Practical use                                                                                                                                      |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Overview     | Review open work, backlog, recent activity and the workshop view at the daily stand-up.                                                            |
-| Requests     | Record the customer problem, intended use, dimensions, route, asset, owner, deadline and supporting files. Keep missing information visible.       |
-| Production   | Follow the work queue and required approvals. The 3D workshop is a visual overview; it is not a printer controller or an engineering model viewer. |
-| Quotes       | Separate engineering, manufacturing, testing, shipping and tax. Record the approval of a specific quote version.                                   |
-| Quality      | Record expected and actual results, pass/fail decisions and required checks before release.                                                        |
-| Part library | Find previous parts and create repeat requests with a reference to the original work. Confirm the intended use and interfaces are unchanged.       |
-| Insights     | Review the recorded order economics and workload against editable assumptions. Demo results represent sample records.                              |
-| Settings     | Set workspace details and operating assumptions used by the dashboard.                                                                             |
+| Workspace          | Practical use                                                                                                                                |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Home               | Choose what you need to make or fix, follow the five-step guide, and open requests that need attention.                                      |
+| Requests           | Record the customer problem, intended use, dimensions, route, asset, owner, deadline and supporting files. Keep missing information visible. |
+| Make & repair      | Follow the work queue and required approvals. The 3D equipment illustrations do not control printers or show live readings.                  |
+| Prices & approvals | Separate engineering, manufacturing, testing, shipping and tax. Record the approval of a specific quote version.                             |
+| Final checks       | Record expected and actual results, pass/fail decisions and required checks before release.                                                  |
+| Saved parts        | Find previous parts and create repeat requests with a reference to the original work. Confirm the intended use and interfaces are unchanged. |
+| Reports            | Review the recorded order economics and workload against editable assumptions. Demo results represent sample records.                        |
+| Settings           | Set workspace details and operating assumptions used by the dashboard.                                                                       |
 
 The pilot records administrative approvals inside one workspace. It does not yet prove customer identity, implement separate customer organizations, or enforce independent engineer/operator/QC roles. Full document-hash approval chains and independent second review remain future work. Staff must continue the physical inspection and release procedures from the plan.
 
@@ -54,7 +54,7 @@ Changes can notify open dashboards through Server-Sent Events. The browser keeps
 
 SQLite is well suited to a small, single-server deployment with short queries. Its built-in Node API is synchronous and classed as a release candidate in Node 24.18. Long queries can hold up API work, and WAL permits only one writer at a time. Keep queries bounded, preserve indexes, and move to PostgreSQL when concurrent writers or multiple backend instances become a real requirement. [Node API constraints](https://nodejs.org/download/release/v24.18.0/docs/api/sqlite.html), [SQLite WAL](https://www.sqlite.org/wal.html)
 
-The Three.js scene should add context without delaying ordinary dashboard interactions: use simple geometry, a bounded render resolution and proper resource cleanup. The scene does not substitute for measured equipment telemetry. [Three.js rendering guidance](https://threejs.org/manual/en/responsive.html), [Three.js resource cleanup](https://threejs.org/manual/en/cleanup.html)
+The Three.js illustrations use one shared renderer, reusable geometry and materials, a capped render resolution, and at most 25 frames per second. Scrolling updates each model's position; views outside the screen do not keep animating. Use **Pause 3D** in the header for still illustrations. Reduced-motion settings are respected, and simple icons remain available if graphics cannot load. The models do not substitute for measured equipment telemetry or an uploaded part's actual geometry.
 
 ## Improve the business constraint first
 

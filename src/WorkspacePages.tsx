@@ -38,6 +38,9 @@ import type {
 import { api, dateLabel, money, statusLabels } from './api';
 import Modal from './Modal';
 import './pages.css';
+import { ModelView } from './ModelScene';
+import type { ModelKind } from './models/types';
+import { nextStep } from './workflow';
 
 type Notice = (message: string, kind?: 'success' | 'error') => void;
 interface Props {
@@ -71,18 +74,21 @@ function PageTitle({
   title,
   description,
   action,
+  model = 'blueprint',
 }: {
+  model?: ModelKind;
   title: string;
   description: string;
   action?: ReactNode;
 }) {
   return (
-    <div className="page-heading">
-      <div>
-        <p className="eyebrow">Your workshop, connected</p>
+    <div className="page-heading module-heading">
+      <div className="module-heading-copy">
+        <p className="eyebrow">ONE STEP AT A TIME</p>
         <h1>{title}</h1>
         <p className="muted">{description}</p>
       </div>
+      <ModelView kind={model} className="module-heading-model" />
       {action}
     </div>
   );
@@ -145,7 +151,7 @@ function CasesPage({ data, onNewCase, onOpenCase }: Props) {
     [data.cases, query, filter, service, sort],
   );
   const tabs = [
-    { id: 'all', label: 'All cases', count: data.cases.length },
+    { id: 'all', label: 'All requests', count: data.cases.length },
     {
       id: 'open',
       label: 'Active',
@@ -165,12 +171,13 @@ function CasesPage({ data, onNewCase, onOpenCase }: Props) {
   return (
     <>
       <PageTitle
-        title="Every part has a story."
-        description="Keep every request, decision, and delivery in one place."
+        title="Requests"
+        model="blueprint"
+        description="Open a request to see what it needs and what to do next."
         action={
           <button className="button primary" onClick={onNewCase}>
             <Plus size={17} />
-            New case
+            New request
           </button>
         }
       />
@@ -194,7 +201,7 @@ function CasesPage({ data, onNewCase, onOpenCase }: Props) {
             <Search size={17} />
             <input
               aria-label="Search cases"
-              placeholder="Search by case, customer, or material…"
+              placeholder="Search by request, customer, or material…"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />
@@ -233,86 +240,52 @@ function CasesPage({ data, onNewCase, onOpenCase }: Props) {
           </div>
         </div>
         {filtered.length ? (
-          <div className="business-table-wrap">
-            <table className="business-table">
-              <thead>
-                <tr>
-                  <th>Case / project</th>
-                  <th>Customer</th>
-                  <th>Status</th>
-                  <th>Due date</th>
-                  <th>Value</th>
-                  <th>
-                    <span className="sr-only">Open</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <button className="case-name-button" onClick={() => onOpenCase(item.id)}>
-                        <span className={`mini-part-icon ${item.service}`}>
-                          <Box size={20} />
-                        </span>
-                        <span>
-                          <strong>{item.title}</strong>
-                          <small>
-                            {item.reference}
-                            <span className="text-separator">·</span>
-                            {services[item.service]}
-                          </small>
-                        </span>
-                      </button>
-                    </td>
-                    <td>
-                      <span className="table-customer">{item.customer}</span>
-                      <small className="table-secondary">{item.owner || 'Unassigned'}</small>
-                    </td>
-                    <td>
-                      <Status value={item.status} />
-                    </td>
-                    <td>
-                      <span
-                        className={
-                          item.dueDate &&
-                          new Date(item.dueDate).getTime() < Date.now() &&
-                          item.status !== 'delivered'
-                            ? 'date-overdue'
-                            : ''
-                        }
-                      >
-                        {dateLabel(item.dueDate)}
-                      </span>
-                      {item.priority !== 'normal' && (
-                        <small className={`priority-label ${item.priority}`}>
-                          {item.priority === 'urgent' ? 'Urgent' : 'High priority'}
-                        </small>
-                      )}
-                    </td>
-                    <td className="money-cell">{money(item.amount)}</td>
-                    <td>
-                      <button
-                        className="table-arrow"
-                        onClick={() => onOpenCase(item.id)}
-                        aria-label={`Open ${item.reference}`}
-                      >
-                        <ArrowUpRight size={17} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="request-card-grid">
+            {filtered.map((item) => (
+              <article className="request-card" key={item.id}>
+                <div className="request-card-top">
+                  <span>{item.reference}</span>
+                  <Status value={item.status} />
+                </div>
+                <button className="request-card-title" onClick={() => onOpenCase(item.id)}>
+                  {item.title}
+                  <ArrowUpRight size={19} />
+                </button>
+                <p className="request-customer">
+                  {item.customer} <span className="text-separator">/</span> {services[item.service]}
+                </p>
+                <div className="request-card-next">
+                  <strong>Next: {nextStep(item).title}</strong>
+                  <p>{nextStep(item).text}</p>
+                </div>
+                <div className="request-card-meta">
+                  <span>
+                    Due <strong>{dateLabel(item.dueDate)}</strong>
+                  </span>
+                  <span>
+                    Owner <strong>{item.owner || 'Not assigned yet'}</strong>
+                  </span>
+                  <span>
+                    Price <strong>{item.amount ? money(item.amount) : 'Not set yet'}</strong>
+                  </span>
+                </div>
+                <button
+                  className="text-button request-card-open"
+                  onClick={() => onOpenCase(item.id)}
+                >
+                  Open request <ChevronRight size={17} />
+                </button>
+              </article>
+            ))}
           </div>
         ) : (
           <Empty
-            title="No cases found"
+            title="No requests found"
             text="Try a different search or create your first request."
             action={
               <button className="button secondary" onClick={onNewCase}>
                 <Plus size={16} />
-                Create a case
+                Create a request
               </button>
             }
           />
@@ -323,7 +296,7 @@ function CasesPage({ data, onNewCase, onOpenCase }: Props) {
           </span>
           <span>
             <ShieldCheck size={14} />
-            Every decision stays with its case
+            Each request keeps its own history
           </span>
         </div>
       </div>
@@ -373,8 +346,9 @@ function ProductionPage({ data, refresh, notify, onOpenCase }: Props) {
   return (
     <>
       <PageTitle
-        title="Good work, in motion."
-        description="A focused view of production and the equipment behind it."
+        title="Make & repair"
+        model="robot"
+        description="These jobs have been approved. Finish the work, then send each item for its final checks."
       />
       <div className="page-stat-grid">
         <div className="card small-stat">
@@ -416,7 +390,7 @@ function ProductionPage({ data, refresh, notify, onOpenCase }: Props) {
       </div>
       <div className="section-heading">
         <div>
-          <h2>The production queue</h2>
+          <h2>Jobs being made or repaired</h2>
           <p>Complete the job, then verify the result.</p>
         </div>
         <span className="subtle-pill">
@@ -475,7 +449,7 @@ function ProductionPage({ data, refresh, notify, onOpenCase }: Props) {
                   ) : (
                     <Check size={15} />
                   )}
-                  Send to quality
+                  Send for final checks
                 </button>
               </div>
             </article>
@@ -503,16 +477,14 @@ function ProductionPage({ data, refresh, notify, onOpenCase }: Props) {
         {data.machines.map((machine) => (
           <article className="card machine-card" key={machine.id}>
             <div className="machine-card-top">
-              <span className="equipment-icon">
-                <Printer size={29} strokeWidth={1.5} />
-              </span>
+              <ModelView kind="printer" className="equipment-model" />
               <Status value={machine.status} />
             </div>
             <h3>{machine.name}</h3>
             <p>{machine.model}</p>
             <div className="machine-qualification">
               <ShieldCheck size={14} />
-              {machine.qualified ? 'Qualification recorded' : 'Qualification needed'}
+              {machine.qualified ? 'Equipment review recorded' : 'Equipment review needed'}
             </div>
             <div className="machine-manual">
               <label htmlFor={`machine-${machine.id}`}>Set workshop status</label>
@@ -527,7 +499,9 @@ function ProductionPage({ data, refresh, notify, onOpenCase }: Props) {
                 <option value="maintenance">Maintenance</option>
               </select>
             </div>
-            <span className="manual-note">Updated by your team · No live telemetry</span>
+            <span className="manual-note">
+              Updated by your team · No automatic machine readings
+            </span>
           </article>
         ))}
       </div>
@@ -831,8 +805,9 @@ function QuotesPage(props: Props) {
   return (
     <>
       <PageTitle
-        title="Clarity before commitment."
-        description="Price the engineering, the making, and the confidence that comes with it."
+        title="Prices & approvals"
+        model="receipt"
+        description="Prepare a price estimate and record approval before the team starts work."
         action={
           <button className="button primary" onClick={() => setCreating(true)}>
             <Plus size={17} />
@@ -846,7 +821,7 @@ function QuotesPage(props: Props) {
             <FileText size={19} />
           </span>
           <div>
-            <p>Current draft value</p>
+            <p>Prices being prepared</p>
             <strong>{money(total('draft'))}</strong>
           </div>
         </div>
@@ -1164,30 +1139,31 @@ function QualityPage({ data, refresh, notify, onOpenCase }: Props) {
   return (
     <>
       <PageTitle
-        title="Confidence, checked."
-        description="A working outcome is earned at inspection. Keep the evidence with the part."
+        title="Final checks"
+        model="check"
+        description="Choose a finished job, record the results, and check that it is ready for the customer."
       />
       <div className="quality-banner">
         <div className="quality-banner-icon">
           <ShieldCheck size={26} />
         </div>
         <div>
-          <h3>Quality is a release gate.</h3>
+          <h3>Check it before sending it.</h3>
           <p>
-            Record actual results. Every required check must pass before a case can move to
-            dispatch.
+            Write down what you measured. Every required check must pass before the item is ready
+            for dispatch.
           </p>
         </div>
         <span>
           {qualityCases.length}
-          <small>awaiting inspection</small>
+          <small>waiting to be checked</small>
         </span>
       </div>
       {qualityCases.length ? (
         <div className="quality-layout">
           <aside className="card inspection-queue">
             <div className="panel-heading">
-              <h3>Inspection queue</h3>
+              <h3>Jobs to check</h3>
               <span>{qualityCases.length}</span>
             </div>
             {qualityCases.map((item) => {
@@ -1241,7 +1217,7 @@ function QualityPage({ data, refresh, notify, onOpenCase }: Props) {
             </div>
             <div className="inspection-section-title">
               <ClipboardCheck size={17} />
-              <h3>Acceptance checklist</h3>
+              <h3>Checks to complete</h3>
               <span>
                 {completed} of {checks.length} passed
               </span>
@@ -1430,8 +1406,9 @@ function LibraryPage(props: Props) {
   return (
     <>
       <PageTitle
-        title="Build once. Learn forever."
-        description="Your private record of verified parts, revisions, and repeatable work."
+        title="Saved parts"
+        model="library"
+        description="Find parts that worked before. Open their details or order another batch."
         action={
           <span className="private-library">
             <FolderLock size={16} />
@@ -1441,7 +1418,7 @@ function LibraryPage(props: Props) {
       />
       <div className="library-feature">
         <div>
-          <span className="eyebrow">The value is in the evidence</span>
+          <span className="eyebrow">READY FOR ANOTHER BATCH</span>
           <h2>
             Every verified part is
             <br />a head start on the next one.
@@ -1452,16 +1429,14 @@ function LibraryPage(props: Props) {
           </p>
         </div>
         <div className="library-feature-visual" aria-hidden="true">
-          <div className="library-floating-part">
-            <Layers3 size={66} strokeWidth={1} />
-          </div>
+          <ModelView kind="library" hero className="library-feature-model" />
           <span className="library-verified">
             <CheckCircle2 size={14} />
-            Revision controlled
+            Design version saved
           </span>
           <span className="library-part-count">
             {data.parts.length}
-            <small>verified records</small>
+            <small>saved parts</small>
           </span>
         </div>
       </div>
@@ -1499,11 +1474,10 @@ function LibraryPage(props: Props) {
           <article className="card part-card" key={part.id}>
             <div className={`part-card-visual visual-${index % 4}`}>
               <span className="part-revision">Rev {part.revision}</span>
-              <div className={`css-part part-shape-${index % 3}`} aria-hidden="true">
-                <span />
-                <span />
-                <span />
-              </div>
+              <ModelView
+                kind={/gear|knob|wheel/i.test(part.name) ? 'gear' : 'bracket'}
+                className="part-model"
+              />
               <span className="part-illustration-label">Illustration</span>
               <span className="part-material">{part.material}</span>
             </div>
@@ -1621,8 +1595,9 @@ function InsightsPage({ data }: Props) {
   return (
     <>
       <PageTitle
-        title="See what moves you forward."
-        description="A clear view of your case data, with planning assumptions kept visible."
+        title="Reports"
+        model="receipt"
+        description="Understand the work, the costs, and where the team needs more time."
         action={
           <a
             className="button secondary"
@@ -1631,7 +1606,7 @@ function InsightsPage({ data }: Props) {
             rel="noreferrer"
           >
             <FileText size={16} />
-            Read the blueprint
+            Read the Tobor plan
             <ArrowUpRight size={15} />
           </a>
         }
@@ -1907,8 +1882,9 @@ function SettingsPage({ data, refresh, notify, user }: Props) {
   return (
     <>
       <PageTitle
-        title="Make room for your way of working."
-        description="Set the workshop details and assumptions behind your workspace."
+        title="Settings"
+        model="bracket"
+        description="Update your workshop details. The planning numbers help estimate costs and capacity."
       />
       <div className="settings-layout">
         <form className="card workspace-settings" onSubmit={save}>

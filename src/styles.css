@@ -10,7 +10,7 @@
   --green-hover: #245447;
   --lime: #cef18b;
   --ink: #26392f;
-  --muted: #89918d;
+  --muted: #607168;
   --border: #e9ece9;
   --bg: #f7f8fa;
   --radius: 14px;
@@ -20,7 +20,7 @@
 }
 body {
   margin: 0;
-  min-width: 360px;
+  min-width: 320px;
 }
 button,
 input,
@@ -94,13 +94,13 @@ button:active:not(:disabled) {
 }
 .muted {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
 }
 .eyebrow {
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 1.7px;
   font-weight: 650;
-  color: #8b938e;
+  color: #607168;
   margin-bottom: 10px;
 }
 .button {
@@ -112,7 +112,7 @@ button:active:not(:disabled) {
   border-radius: 8px;
   padding: 11px 16px;
   min-height: 40px;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
@@ -134,7 +134,7 @@ button:active:not(:disabled) {
   background: #f2f5f1;
 }
 .button.small {
-  font-size: 11px;
+  font-size: 15px;
   min-height: 32px;
   padding: 8px 12px;
 }
@@ -163,7 +163,7 @@ button:active:not(:disabled) {
   gap: 7px;
   background: none;
   border: 0;
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 550;
   color: #42614c;
   padding: 4px 0;
@@ -186,7 +186,7 @@ button:active:not(:disabled) {
   padding: 23px 23px 0;
 }
 .card-heading h2 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 750;
   letter-spacing: -0.2px;
   display: flex;
@@ -194,8 +194,8 @@ button:active:not(:disabled) {
   gap: 9px;
 }
 .card-heading p {
-  font-size: 11px;
-  color: #8b938e;
+  font-size: 15px;
+  color: #607168;
   margin-top: 6px;
 }
 .count-pill {
@@ -203,7 +203,7 @@ button:active:not(:disabled) {
   background: #f5f7f3;
   color: #79866e;
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 13px;
   min-width: 23px;
   text-align: center;
   padding: 2px 5px;
@@ -248,7 +248,7 @@ button:active:not(:disabled) {
   }
 }
 .pill {
-  font-size: 10px;
+  font-size: 13px;
   border: 1px solid #dce5d7;
   background: #f0f5ea;
   border-radius: 20px;
@@ -332,7 +332,7 @@ button:active:not(:disabled) {
   gap: 22px;
 }
 .app-loading p {
-  font-size: 14px;
+  font-size: 16px;
   color: #79877c;
 }
 .loading-orbit {
@@ -403,7 +403,7 @@ button:active:not(:disabled) {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 650;
   color: #6a8159;
 }
@@ -413,7 +413,7 @@ button:active:not(:disabled) {
 }
 .workspace-switch strong {
   display: block;
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -424,7 +424,7 @@ button:active:not(:disabled) {
   align-items: center;
   gap: 5px;
   color: #90998e;
-  font-size: 10px;
+  font-size: 13px;
   margin-top: 4px;
 }
 .workspace-switch span i {
@@ -437,7 +437,7 @@ button:active:not(:disabled) {
   padding: 4px;
 }
 .nav-section-label {
-  font-size: 8px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 1.6px;
   color: #a2aaa3;
@@ -457,7 +457,7 @@ button:active:not(:disabled) {
   background: none;
   text-align: left;
   color: #778279;
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 500;
   padding: 12px 13px;
   border-radius: 7px;
@@ -484,7 +484,7 @@ button:active:not(:disabled) {
   background: #fff;
   border: 1px solid #dde5d5;
   color: #6f835e;
-  font-size: 10px;
+  font-size: 13px;
   min-width: 21px;
   border-radius: 4px;
   text-align: center;
@@ -518,12 +518,12 @@ button:active:not(:disabled) {
   margin-bottom: 11px;
 }
 .sidebar-tip h3 {
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 750;
   margin-bottom: 7px;
 }
 .sidebar-tip p {
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.7;
   color: #89947e;
 }
@@ -531,7 +531,7 @@ button:active:not(:disabled) {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 10px;
+  font-size: 13px;
   color: #627449;
   background: none;
   border: 0;
@@ -555,7 +555,7 @@ button:active:not(:disabled) {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 9px;
+  font-size: 13px;
   color: #626d53;
   font-weight: 650;
 }
@@ -565,7 +565,7 @@ button:active:not(:disabled) {
 }
 .user-block strong {
   display: block;
-  font-size: 11px;
+  font-size: 15px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -573,7 +573,7 @@ button:active:not(:disabled) {
 .user-block > div span {
   display: block;
   color: #98a092;
-  font-size: 8px;
+  font-size: 13px;
   margin-top: 4px;
 }
 .user-block .icon-button {
@@ -600,7 +600,7 @@ button:active:not(:disabled) {
   display: flex;
   gap: 11px;
   align-items: center;
-  font-size: 10px;
+  font-size: 13px;
   white-space: nowrap;
 }
 .breadcrumb > span {
@@ -627,7 +627,7 @@ button:active:not(:disabled) {
 }
 .global-search input {
   width: 166px;
-  font-size: 10px;
+  font-size: 13px;
   border: 0;
   background: none;
   padding: 9px 0;
@@ -637,7 +637,7 @@ button:active:not(:disabled) {
   color: #a3a9a0;
 }
 .global-search kbd {
-  font-size: 9px;
+  font-size: 13px;
   padding: 3px 5px;
   border: 1px solid #e7ebe3;
   border-radius: 4px;
@@ -668,7 +668,7 @@ button:active:not(:disabled) {
   background: #e8e9dd;
   box-shadow: 0 0 0 3px #f6f7f1;
   border-radius: 50%;
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 650;
   display: flex;
   align-items: center;
@@ -694,7 +694,7 @@ button:active:not(:disabled) {
 }
 .search-label {
   color: #9aa390;
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 1px;
   padding: 9px;
@@ -722,25 +722,25 @@ button:active:not(:disabled) {
 }
 .search-results strong,
 .notification-panel strong {
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 550;
   display: block;
 }
 .search-results small,
 .notification-panel small {
   display: block;
-  font-size: 10px;
+  font-size: 13px;
   color: #95a08d;
   margin-top: 5px;
 }
 .search-results p,
 .notification-panel p {
-  font-size: 12px;
+  font-size: 15px;
   padding: 14px;
   color: #829077;
 }
 .notification-panel h3 {
-  font-size: 13px;
+  font-size: 15px;
   padding: 10px;
 }
 .notification-dot {
@@ -767,7 +767,7 @@ button:active:not(:disabled) {
   justify-content: space-between;
   height: 48px;
   margin-bottom: 15px;
-  font-size: 9px;
+  font-size: 13px;
   color: #8f9a8b;
 }
 .workspace-status > span {
@@ -781,7 +781,7 @@ button:active:not(:disabled) {
   gap: 14px;
 }
 .demo-label {
-  font-size: 8px;
+  font-size: 13px;
   letter-spacing: 0.7px;
   color: #959a83;
   border: 1px solid #e5e8dc;
@@ -789,7 +789,7 @@ button:active:not(:disabled) {
   border-radius: 3px;
 }
 .today-label {
-  font-size: 9px;
+  font-size: 13px;
   color: #8e9888;
 }
 .page-heading {
@@ -809,7 +809,7 @@ button:active:not(:disabled) {
   align-items: center;
 }
 .page-heading p {
-  font-size: 12px;
+  font-size: 15px;
   color: #92998f;
   margin-top: 7px;
 }
@@ -837,7 +837,7 @@ button:active:not(:disabled) {
   gap: 8px;
 }
 .stat-top > span:first-child {
-  font-size: 11px;
+  font-size: 15px;
   color: #7b887e;
   font-weight: 500;
 }
@@ -873,7 +873,7 @@ button:active:not(:disabled) {
   font-family: 'Manrope Variable', sans-serif;
 }
 .stat-value > span {
-  font-size: 13px;
+  font-size: 15px;
   letter-spacing: 0;
   font-weight: 500;
   color: #a6afa1;
@@ -883,7 +883,7 @@ button:active:not(:disabled) {
   display: flex;
   gap: 5px;
   align-items: center;
-  font-size: 9px;
+  font-size: 13px;
   color: #9aa490;
   white-space: nowrap;
 }
@@ -926,7 +926,7 @@ button:active:not(:disabled) {
   justify-content: center;
   border-radius: 50%;
   color: white;
-  font-size: 8px;
+  font-size: 13px;
   font-weight: 500;
 }
 .stage-marker > div {
@@ -942,7 +942,7 @@ button:active:not(:disabled) {
   color: #4e5a4a;
 }
 .flow-stage > span {
-  font-size: 9px;
+  font-size: 13px;
   color: #a1aa9a;
   margin-top: 4px;
 }
@@ -955,14 +955,14 @@ button:active:not(:disabled) {
   padding-top: 19px;
 }
 .chart-heading h3 {
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 650;
 }
 .chart-heading select {
   border: 1px solid #e9ede4;
   border-radius: 5px;
   padding: 5px 8px;
-  font-size: 9px;
+  font-size: 13px;
   color: #909b86;
   background: #fff;
 }
@@ -978,7 +978,7 @@ button:active:not(:disabled) {
   display: flex;
   align-items: center;
   gap: 15px;
-  font-size: 9px;
+  font-size: 13px;
   color: #99a38f;
 }
 .chart-legend > span {
@@ -998,7 +998,7 @@ button:active:not(:disabled) {
 }
 .chart-legend .chart-note {
   margin-left: auto;
-  font-size: 8px;
+  font-size: 13px;
   color: #a7ada0;
 }
 .workshop-card {
@@ -1033,7 +1033,7 @@ button:active:not(:disabled) {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 7px;
+  font-size: 13px;
   font-weight: 450;
   letter-spacing: 1px;
   color: #bed3a9;
@@ -1044,7 +1044,7 @@ button:active:not(:disabled) {
   background: #c3e895;
 }
 .three-badge {
-  font-size: 6px;
+  font-size: 13px;
   letter-spacing: 0.8px;
   color: #b4caa0;
   border: 1px solid #71936540;
@@ -1063,7 +1063,7 @@ button:active:not(:disabled) {
 }
 .workshop-card > p {
   color: #adc3a6;
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.9;
   position: relative;
   z-index: 2;
@@ -1100,7 +1100,7 @@ button:active:not(:disabled) {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 9px;
+  font-size: 13px;
   color: #c9d9b5;
 }
 .workshop-card-bottom > button {
@@ -1127,7 +1127,7 @@ button:active:not(:disabled) {
   font-size: 80px;
 }
 .printer-fallback p {
-  font-size: 11px;
+  font-size: 15px;
 }
 .scene-loading {
   height: 200px;
@@ -1153,7 +1153,7 @@ button:active:not(:disabled) {
   text-align: left;
 }
 .cases-table th {
-  font-size: 7px;
+  font-size: 13px;
   letter-spacing: 0.8px;
   font-weight: 500;
   color: #98a48f;
@@ -1168,7 +1168,7 @@ button:active:not(:disabled) {
 .cases-table td {
   padding: 13px 10px;
   border-bottom: 1px solid #f0f2ed;
-  font-size: 10px;
+  font-size: 13px;
 }
 .cases-table td:first-child {
   padding-left: 23px;
@@ -1192,7 +1192,7 @@ button:active:not(:disabled) {
   max-width: 260px;
 }
 .case-title-button strong {
-  font-size: 10px;
+  font-size: 13px;
   display: block;
   font-weight: 550;
   max-width: 220px;
@@ -1202,7 +1202,7 @@ button:active:not(:disabled) {
   color: #58644f;
 }
 .case-title-button small {
-  font-size: 8px;
+  font-size: 13px;
   display: block;
   color: #a4ad9c;
   margin-top: 5px;
@@ -1238,12 +1238,12 @@ button:active:not(:disabled) {
   border-color: #eee6d9;
 }
 .table-service {
-  font-size: 8px;
+  font-size: 13px;
   color: #94a187;
 }
 .table-date {
   color: #8d9b82 !important;
-  font-size: 9px !important;
+  font-size: 13px !important;
 }
 .badge {
   display: inline-flex;
@@ -1256,7 +1256,7 @@ button:active:not(:disabled) {
   border-radius: 5px;
   background: #f5f6f0;
   color: #8e9a7c;
-  font-size: 8px;
+  font-size: 13px;
   font-weight: 500;
 }
 .badge i {
@@ -1309,7 +1309,7 @@ button:active:not(:disabled) {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-size: 8px;
+  font-size: 13px;
   color: #a8b29e;
 }
 .table-footer > span:first-child {
@@ -1321,7 +1321,7 @@ button:active:not(:disabled) {
   overflow: hidden;
 }
 .activity-live {
-  font-size: 7px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.8px;
   color: #98a78a;
@@ -1371,13 +1371,13 @@ button:active:not(:disabled) {
   color: #91aabc;
 }
 .activity-item p {
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.6;
   color: #6a795e;
 }
 .activity-item > div:last-child > span {
   display: block;
-  font-size: 8px;
+  font-size: 13px;
   color: #a6b09c;
   margin-top: 5px;
 }
@@ -1388,7 +1388,7 @@ button:active:not(:disabled) {
 .activity-link {
   background: none;
   border: 0;
-  font-size: 8px;
+  font-size: 13px;
   display: flex;
   align-items: center;
   gap: 3px;
@@ -1406,7 +1406,7 @@ button:active:not(:disabled) {
   border: 0;
   border-top: 1px solid #edf0e6;
   color: #8b9d76;
-  font-size: 9px;
+  font-size: 13px;
 }
 .activity-bottom > span {
   display: flex;
@@ -1419,7 +1419,7 @@ button:active:not(:disabled) {
   gap: 12px;
   align-items: center;
   padding-top: 23px;
-  font-size: 8px;
+  font-size: 13px;
   color: #aeb7a4;
 }
 .dashboard-footer > span {
@@ -1442,7 +1442,7 @@ button:active:not(:disabled) {
   justify-content: center;
   gap: 18px;
   color: #8a9b79;
-  font-size: 13px;
+  font-size: 15px;
 }
 .app-error {
   display: flex;
@@ -1485,7 +1485,7 @@ button:active:not(:disabled) {
   z-index: 2;
 }
 .auth-kicker {
-  font-size: 9px;
+  font-size: 13px;
   color: #b4c9a2;
   letter-spacing: 1.8px;
   display: flex;
@@ -1509,7 +1509,7 @@ button:active:not(:disabled) {
   margin-top: 23px;
 }
 .auth-intro > p {
-  font-size: 13px;
+  font-size: 15px;
   color: #aec4a9;
   line-height: 1.9;
   margin-top: 22px;
@@ -1535,7 +1535,7 @@ button:active:not(:disabled) {
   display: flex;
   gap: 7px;
   align-items: center;
-  font-size: 9px;
+  font-size: 13px;
   color: #d7e5c7;
   box-shadow: 0 3px 20px #16392110;
 }
@@ -1558,7 +1558,7 @@ button:active:not(:disabled) {
   color: #a4bba0;
   position: relative;
   z-index: 2;
-  font-size: 10px;
+  font-size: 13px;
   border-top: 1px solid #aec79120;
   padding-top: 23px;
 }
@@ -1574,7 +1574,7 @@ button:active:not(:disabled) {
   align-items: center;
 }
 .auth-top > span:first-child {
-  font-size: 9px;
+  font-size: 13px;
   letter-spacing: 1.7px;
   font-weight: 600;
   color: #8b9485;
@@ -1597,7 +1597,7 @@ button:active:not(:disabled) {
   margin-bottom: 28px;
 }
 .auth-form-content > .eyebrow {
-  font-size: 9px;
+  font-size: 13px;
   letter-spacing: 1.5px;
   margin-bottom: 11px;
 }
@@ -1608,7 +1608,7 @@ button:active:not(:disabled) {
   line-height: 1.4;
 }
 .auth-description {
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.8;
   color: #939c8b;
   margin-top: 13px;
@@ -1616,7 +1616,7 @@ button:active:not(:disabled) {
 }
 .auth-form-content .field {
   margin-bottom: 19px;
-  font-size: 11px;
+  font-size: 15px;
 }
 .auth-form-content input {
   padding: 13px 13px;
@@ -1639,7 +1639,7 @@ button:active:not(:disabled) {
   justify-content: center;
   position: relative;
   min-height: 45px;
-  font-size: 12px;
+  font-size: 15px;
 }
 .auth-submit > svg:last-child {
   position: absolute;
@@ -1654,11 +1654,11 @@ button:active:not(:disabled) {
   border-radius: 10px;
   background: #fff9e8;
   color: #6c5220;
-  font-size: 12px;
+  font-size: 15px;
   line-height: 1.55;
 }
 .test-access-banner strong {
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 700;
 }
 .auth-note {
@@ -1681,7 +1681,7 @@ button:active:not(:disabled) {
   flex-shrink: 0;
 }
 .auth-note p {
-  font-size: 10px;
+  font-size: 13px;
   color: #9ba691;
   line-height: 1.8;
 }
@@ -1689,7 +1689,7 @@ button:active:not(:disabled) {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  font-size: 9px;
+  font-size: 13px;
   color: #a5ada0;
 }
 .auth-footer > span:last-child {
@@ -1703,7 +1703,7 @@ button:active:not(:disabled) {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 550;
   color: #6a785f;
 }
@@ -1717,7 +1717,7 @@ button:active:not(:disabled) {
   border-radius: 7px;
   background: #fff;
   padding: 10px 12px;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 1.5;
   transition:
@@ -1727,7 +1727,7 @@ button:active:not(:disabled) {
 .field input::placeholder,
 .field textarea::placeholder {
   color: #a9b19f;
-  font-size: 11px;
+  font-size: 15px;
 }
 .field input:focus,
 .field select:focus,
@@ -1752,7 +1752,7 @@ button:active:not(:disabled) {
   grid-column: 1/-1;
 }
 .form-hint {
-  font-size: 10px;
+  font-size: 13px;
   color: #9ba58f;
   line-height: 1.8;
   margin-top: 10px;
@@ -1763,7 +1763,7 @@ button:active:not(:disabled) {
   background: #fff4ed;
   border-radius: 7px;
   padding: 12px 14px;
-  font-size: 12px;
+  font-size: 15px;
   line-height: 1.6;
   margin: 16px 0;
 }
@@ -1783,7 +1783,7 @@ button:active:not(:disabled) {
   margin-top: 1px;
 }
 .info-callout p {
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.8;
   color: #899c75;
 }
@@ -1797,11 +1797,11 @@ button:active:not(:disabled) {
   gap: 12px;
 }
 .empty-state h3 {
-  font-size: 16px;
+  font-size: 18px;
   color: #61744e;
 }
 .empty-state p {
-  font-size: 12px;
+  font-size: 15px;
   line-height: 1.7;
 }
 .empty-state .button {
@@ -1856,7 +1856,7 @@ button:active:not(:disabled) {
   font-weight: 700;
 }
 .modal-header p {
-  font-size: 11px;
+  font-size: 15px;
   color: #9ba890;
   margin-top: 8px;
   line-height: 1.6;
@@ -1906,11 +1906,11 @@ button:active:not(:disabled) {
   box-shadow: 0 0 0 1px #b1c498;
 }
 .service-picker strong {
-  font-size: 11px;
+  font-size: 15px;
   color: #6a7c59;
 }
 .service-picker > button > span {
-  font-size: 9px;
+  font-size: 13px;
   line-height: 1.6;
 }
 .service-check {
@@ -1925,13 +1925,13 @@ button:active:not(:disabled) {
   gap: 15px;
 }
 .detail-overview .badge {
-  font-size: 10px;
+  font-size: 13px;
 }
 .detail-overview .muted {
-  font-size: 10px;
+  font-size: 13px;
 }
 .priority-label {
-  font-size: 9px;
+  font-size: 13px;
   color: #99a18c;
   text-transform: capitalize;
   margin-left: auto;
@@ -1953,7 +1953,7 @@ button:active:not(:disabled) {
   background: none;
   border: 0;
   border-bottom: 2px solid transparent;
-  font-size: 11px;
+  font-size: 15px;
   color: #a0ac92;
 }
 .detail-tabs > button[aria-selected='true'] {
@@ -1995,12 +1995,12 @@ button:active:not(:disabled) {
   color: #779c54;
 }
 .approval-item h3 {
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 650;
   color: #667852;
 }
 .approval-item p {
-  font-size: 10px;
+  font-size: 13px;
   color: #a1ae91;
   line-height: 1.7;
   margin-top: 6px;
@@ -2016,7 +2016,7 @@ button:active:not(:disabled) {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  font-size: 11px;
+  font-size: 15px;
   color: #899b72;
   line-height: 1.8;
   margin-bottom: 12px;
@@ -2031,7 +2031,7 @@ button:active:not(:disabled) {
   gap: 15px;
   padding: 14px 0;
   border-bottom: 1px solid #eff2e9;
-  font-size: 11px;
+  font-size: 15px;
   color: #8f9e7d;
 }
 .quote-summary-line strong {
@@ -2053,16 +2053,16 @@ button:active:not(:disabled) {
   cursor: pointer;
 }
 .file-upload strong {
-  font-size: 12px;
+  font-size: 15px;
   color: #809664;
 }
 .file-upload > span {
-  font-size: 9px;
+  font-size: 13px;
   color: #a2b38d;
 }
 .file-upload > input {
   max-width: 250px;
-  font-size: 10px;
+  font-size: 13px;
   margin-top: 8px;
 }
 .file-upload > input::file-selector-button {
@@ -2090,12 +2090,12 @@ button:active:not(:disabled) {
   flex: 1;
 }
 .file-row strong {
-  font-size: 12px;
+  font-size: 15px;
   color: #7b9360;
   word-break: break-all;
 }
 .file-row small {
-  font-size: 10px;
+  font-size: 13px;
   color: #a4b58e;
   display: block;
   margin-top: 6px;
@@ -2118,17 +2118,17 @@ button:active:not(:disabled) {
   background: #b0c693;
 }
 .case-history strong {
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 500;
   color: #809969;
 }
 .case-history p {
-  font-size: 10px;
+  font-size: 13px;
   color: #a6b894;
   margin-top: 7px;
 }
 .help-body > p {
-  font-size: 12px;
+  font-size: 15px;
   color: #899d75;
   line-height: 1.9;
   margin-bottom: 20px;
@@ -2149,20 +2149,20 @@ button:active:not(:disabled) {
   justify-content: center;
   flex-shrink: 0;
   color: #96b576;
-  font-size: 11px;
+  font-size: 15px;
 }
 .help-step h3 {
-  font-size: 12px;
+  font-size: 15px;
   color: #6f8c55;
 }
 .help-step p {
-  font-size: 11px;
+  font-size: 15px;
   color: #9bb285;
   line-height: 1.9;
   margin-top: 7px;
 }
 .help-body > .form-hint {
-  font-size: 10px;
+  font-size: 13px;
   margin: 18px 0 0;
   color: #a3b991;
 }
@@ -2187,7 +2187,7 @@ button:active:not(:disabled) {
   box-shadow: 0 8px 30px #20412820;
   color: #6a8b50;
   animation: enter 0.2s;
-  font-size: 12px;
+  font-size: 15px;
   line-height: 1.6;
 }
 .toast.error {
@@ -2224,16 +2224,16 @@ button:active:not(:disabled) {
     padding: 23px;
   }
   .stat-top > span:first-child {
-    font-size: 12px;
+    font-size: 15px;
   }
   .stat-value {
     font-size: 35px;
   }
   .stat-foot {
-    font-size: 10px;
+    font-size: 13px;
   }
   .card-heading h2 {
-    font-size: 16px;
+    font-size: 18px;
   }
   .workshop-card {
     min-height: 415px;
@@ -2242,7 +2242,7 @@ button:active:not(:disabled) {
     font-size: 29px;
   }
   .workshop-card > p {
-    font-size: 12px;
+    font-size: 15px;
   }
   .workshop-card .printer-scene {
     inset: 83px -20px 8px 80px;
@@ -2252,22 +2252,22 @@ button:active:not(:disabled) {
     padding-bottom: 17px;
   }
   .case-title-button strong {
-    font-size: 12px;
+    font-size: 15px;
   }
   .case-title-button small {
-    font-size: 9px;
+    font-size: 13px;
   }
   .badge {
-    font-size: 9px;
+    font-size: 13px;
   }
   .table-service {
-    font-size: 10px;
+    font-size: 13px;
   }
   .activity-item p {
-    font-size: 12px;
+    font-size: 15px;
   }
   .activity-item > div:last-child > span {
-    font-size: 9px;
+    font-size: 13px;
   }
   .activity-list {
     padding-top: 26px;
@@ -2300,14 +2300,14 @@ button:active:not(:disabled) {
     padding: 14px 13px;
   }
   .stat-top > span:first-child {
-    font-size: 10px;
+    font-size: 13px;
   }
   .stat-icon {
     width: 26px;
     height: 26px;
   }
   .stat-foot {
-    font-size: 8px;
+    font-size: 13px;
   }
   .overview-main-grid {
     grid-template-columns: minmax(0, 1.65fr) minmax(240px, 1fr);
@@ -2342,10 +2342,10 @@ button:active:not(:disabled) {
     font-size: 23px;
   }
   .workshop-kicker {
-    font-size: 6px;
+    font-size: 13px;
   }
   .three-badge {
-    font-size: 5px;
+    font-size: 13px;
   }
   .workshop-card .printer-scene {
     inset: 90px -70px 0 45px;
@@ -2377,7 +2377,7 @@ button:active:not(:disabled) {
     width: calc(100% - 190px);
   }
   .nav-item {
-    font-size: 10px;
+    font-size: 13px;
     padding: 11px 10px;
     gap: 9px;
   }
@@ -2386,26 +2386,26 @@ button:active:not(:disabled) {
     gap: 6px;
   }
   .workspace-switch strong {
-    font-size: 10px;
+    font-size: 13px;
   }
   .sidebar-tip {
     padding: 12px 10px;
   }
   .sidebar-tip h3 {
-    font-size: 9px;
+    font-size: 13px;
   }
   .sidebar-tip p {
-    font-size: 9px;
+    font-size: 13px;
   }
   .sidebar-tip button {
-    font-size: 8px;
+    font-size: 13px;
   }
   .user-block {
     padding-left: 3px;
     padding-right: 3px;
   }
   .user-block > div span {
-    font-size: 7px;
+    font-size: 13px;
   }
   .main-shell main {
     padding-left: 19px;
@@ -2433,7 +2433,7 @@ button:active:not(:disabled) {
     align-items: flex-start;
   }
   .stat-top > span:first-child {
-    font-size: 9px;
+    font-size: 13px;
     line-height: 1.6;
     max-width: 85px;
   }
@@ -2448,7 +2448,7 @@ button:active:not(:disabled) {
     width: 14px;
   }
   .stat-foot {
-    font-size: 7px;
+    font-size: 13px;
     white-space: normal;
   }
   .overview-main-grid {
@@ -2473,13 +2473,13 @@ button:active:not(:disabled) {
     width: 210px;
   }
   .workshop-card-bottom > span {
-    font-size: 9px;
+    font-size: 13px;
   }
   .workshop-kicker {
-    font-size: 8px;
+    font-size: 13px;
   }
   .three-badge {
-    font-size: 7px;
+    font-size: 13px;
   }
   .activity-card .activity-list {
     grid-template-columns: repeat(2, 1fr);
@@ -2492,7 +2492,7 @@ button:active:not(:disabled) {
     font-size: 47px;
   }
   .auth-intro > p {
-    font-size: 11px;
+    font-size: 15px;
   }
   .auth-form-side {
     padding: 28px;
@@ -2504,7 +2504,7 @@ button:active:not(:disabled) {
     inset: -15px -80px -15px -60px;
   }
   .orbit-label {
-    font-size: 8px;
+    font-size: 13px;
   }
   .orbit-one {
     left: -9px;
@@ -2513,12 +2513,12 @@ button:active:not(:disabled) {
     right: -9px;
   }
   .auth-story-bottom {
-    font-size: 8px;
+    font-size: 13px;
   }
 }
 @media (max-width: 760px) {
   body {
-    min-width: 360px;
+    min-width: 320px;
   }
   .sidebar {
     transform: translateX(-100%);
@@ -2547,30 +2547,30 @@ button:active:not(:disabled) {
     right: 0;
   }
   .sidebar .nav-item {
-    font-size: 12px;
+    font-size: 15px;
     padding: 12px;
   }
   .workspace-switch strong {
-    font-size: 12px;
+    font-size: 15px;
   }
   .menu-button {
     display: flex;
     margin-left: -7px;
   }
   .sidebar-tip h3 {
-    font-size: 12px;
+    font-size: 15px;
   }
   .sidebar-tip p {
-    font-size: 11px;
+    font-size: 15px;
   }
   .sidebar-tip button {
-    font-size: 10px;
+    font-size: 13px;
   }
   .user-block > div span {
-    font-size: 9px;
+    font-size: 13px;
   }
   .user-block strong {
-    font-size: 12px;
+    font-size: 15px;
   }
   .topbar {
     height: 64px;
@@ -2591,26 +2591,26 @@ button:active:not(:disabled) {
     font-size: 24px;
   }
   .page-heading .eyebrow {
-    font-size: 8px;
+    font-size: 13px;
     letter-spacing: 1.3px;
   }
   .page-heading p {
-    font-size: 11px;
+    font-size: 15px;
   }
   .page-heading .button {
-    font-size: 10px;
+    font-size: 13px;
     padding: 10px 12px;
     gap: 6px;
   }
   .workspace-status {
     margin-bottom: 10px;
-    font-size: 8px;
+    font-size: 13px;
   }
   .today-label {
-    font-size: 8px;
+    font-size: 13px;
   }
   .demo-label {
-    font-size: 6px;
+    font-size: 13px;
   }
   .workspace-status > div {
     gap: 8px;
@@ -2623,7 +2623,7 @@ button:active:not(:disabled) {
     padding: 15px 17px;
   }
   .stat-top > span:first-child {
-    font-size: 11px;
+    font-size: 15px;
     max-width: none;
   }
   .stat-icon {
@@ -2637,7 +2637,7 @@ button:active:not(:disabled) {
     font-size: 30px;
   }
   .stat-foot {
-    font-size: 9px;
+    font-size: 13px;
   }
   .overview-main-grid {
     gap: 17px;
@@ -2650,13 +2650,13 @@ button:active:not(:disabled) {
     padding: 20px 18px 0;
   }
   .card-heading h2 {
-    font-size: 13px;
+    font-size: 15px;
   }
   .card-heading p {
-    font-size: 10px;
+    font-size: 13px;
   }
   .card-heading .text-button {
-    font-size: 9px;
+    font-size: 13px;
   }
   .flow-stages {
     padding: 24px 19px 19px;
@@ -2678,7 +2678,7 @@ button:active:not(:disabled) {
     display: none;
   }
   .dashboard-footer {
-    font-size: 7px;
+    font-size: 13px;
     flex-wrap: wrap;
   }
   .cases-table th:first-child,
@@ -2690,13 +2690,13 @@ button:active:not(:disabled) {
     padding-right: 18px;
   }
   .activity-item p {
-    font-size: 11px;
+    font-size: 15px;
   }
   .activity-item > div:last-child > span {
-    font-size: 9px;
+    font-size: 13px;
   }
   .activity-link {
-    font-size: 9px;
+    font-size: 13px;
   }
   .auth-layout {
     grid-template-columns: 1fr;
@@ -2721,7 +2721,7 @@ button:active:not(:disabled) {
     margin-top: 28px;
   }
   .auth-kicker {
-    font-size: 7px;
+    font-size: 13px;
     letter-spacing: 1.3px;
   }
   .auth-intro h1 {
@@ -2763,7 +2763,7 @@ button:active:not(:disabled) {
   }
   .auth-form-content > .eyebrow {
     margin-top: 5px;
-    font-size: 8px;
+    font-size: 13px;
   }
   .auth-form-content h2 {
     font-size: 25px;
@@ -2771,7 +2771,7 @@ button:active:not(:disabled) {
   .auth-description {
     margin-top: 10px;
     margin-bottom: 23px;
-    font-size: 12px;
+    font-size: 15px;
   }
   .auth-form-content .field {
     margin-bottom: 16px;
@@ -2794,7 +2794,7 @@ button:active:not(:disabled) {
     padding: 21px 20px 17px;
   }
   .modal-header h2 {
-    font-size: 18px;
+    font-size: 20px;
   }
   .modal-body {
     padding: 20px;
@@ -2809,10 +2809,10 @@ button:active:not(:disabled) {
     padding: 13px 9px;
   }
   .service-picker strong {
-    font-size: 10px;
+    font-size: 13px;
   }
   .service-picker > button > span {
-    font-size: 8px;
+    font-size: 13px;
   }
   .form-grid {
     gap: 16px;
@@ -2825,7 +2825,7 @@ button:active:not(:disabled) {
     padding: 0 20px;
   }
   .detail-footer .button {
-    font-size: 10px;
+    font-size: 13px;
     white-space: normal;
     padding: 9px 10px;
   }
@@ -2862,10 +2862,10 @@ button:active:not(:disabled) {
   }
   .global-search input {
     width: 85px;
-    font-size: 9px;
+    font-size: 13px;
   }
   .global-search input::placeholder {
-    font-size: 9px;
+    font-size: 13px;
   }
   .topbar-divider {
     display: none;
@@ -2874,7 +2874,7 @@ button:active:not(:disabled) {
     display: none;
   }
   .breadcrumb {
-    font-size: 9px;
+    font-size: 13px;
   }
   .page-heading h1 {
     font-size: 21px;
@@ -2884,10 +2884,10 @@ button:active:not(:disabled) {
     font-size: 20px;
   }
   .page-heading p {
-    font-size: 10px;
+    font-size: 13px;
   }
   .page-heading .button {
-    font-size: 9px;
+    font-size: 13px;
     min-height: 34px;
     padding: 9px 10px;
   }
@@ -2898,10 +2898,10 @@ button:active:not(:disabled) {
     padding: 14px;
   }
   .stat-top > span:first-child {
-    font-size: 10px;
+    font-size: 13px;
   }
   .stat-foot {
-    font-size: 8px;
+    font-size: 13px;
   }
   .workshop-card .printer-scene {
     left: 34%;
@@ -2910,45 +2910,45 @@ button:active:not(:disabled) {
     font-size: 24px;
   }
   .workshop-card > p {
-    font-size: 9px;
+    font-size: 13px;
   }
   .workshop-card-bottom {
     width: 165px;
     right: 17px;
   }
   .workshop-card-bottom > span {
-    font-size: 8px;
+    font-size: 13px;
   }
   .flow-stage > span {
-    font-size: 8px;
+    font-size: 13px;
   }
   .flow-stages {
     padding: 24px 16px 17px;
   }
   .chart-legend {
-    font-size: 8px;
+    font-size: 13px;
   }
   .card-heading p {
-    font-size: 9px;
+    font-size: 13px;
   }
   .card-heading h2 {
-    font-size: 12px;
+    font-size: 15px;
   }
   .card-heading .text-button {
-    font-size: 8px;
+    font-size: 13px;
   }
   .activity-item {
     gap: 7px;
   }
   .activity-item p {
-    font-size: 10px;
+    font-size: 13px;
   }
   .activity-symbol {
     width: 23px;
     height: 23px;
   }
   .activity-item > div:last-child > span {
-    font-size: 8px;
+    font-size: 13px;
   }
   .form-grid {
     grid-template-columns: 1fr;
@@ -2957,10 +2957,10 @@ button:active:not(:disabled) {
     display: none;
   }
   .modal-header h2 {
-    font-size: 16px;
+    font-size: 18px;
   }
   .modal-header p {
-    font-size: 10px;
+    font-size: 13px;
   }
   .approval-item {
     flex-wrap: wrap;
@@ -2969,16 +2969,16 @@ button:active:not(:disabled) {
     min-width: 150px;
   }
   .detail-overview .muted {
-    font-size: 9px;
+    font-size: 13px;
   }
   .priority-label {
-    font-size: 8px;
+    font-size: 13px;
   }
   .detail-tabs {
     gap: 23px;
   }
   .table-footer {
-    font-size: 7px;
+    font-size: 13px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -3039,59 +3039,59 @@ button:active:not(:disabled) {
 }
 .nav-item {
   color: #617065;
-  font-size: 12px;
+  font-size: 15px;
 }
 .nav-item svg {
   color: #85917d;
 }
 .breadcrumb {
-  font-size: 11px;
-}
-.global-search input {
-  font-size: 11px;
-}
-.card-heading h2 {
   font-size: 15px;
 }
+.global-search input {
+  font-size: 15px;
+}
+.card-heading h2 {
+  font-size: 17px;
+}
 .stat-top > span:first-child {
-  font-size: 12px;
+  font-size: 15px;
 }
 .stat-foot {
-  font-size: 10px;
+  font-size: 13px;
 }
 .flow-stage > span {
-  font-size: 10px;
+  font-size: 13px;
 }
 .card-heading p {
-  font-size: 11px;
+  font-size: 15px;
 }
 .chart-heading h3 {
-  font-size: 12px;
+  font-size: 15px;
 }
 .chart-heading select {
-  font-size: 10px;
+  font-size: 13px;
   color: #63735a;
 }
 .case-title-button strong {
-  font-size: 11px;
+  font-size: 15px;
   color: #3d5141;
 }
 .case-title-button small {
-  font-size: 9px;
+  font-size: 13px;
 }
 .cases-table th {
   color: #697962;
-  font-size: 9px;
+  font-size: 13px;
 }
 .table-service {
-  font-size: 10px;
+  font-size: 13px;
 }
 .table-date {
   color: #6c7b6e !important;
-  font-size: 10px !important;
+  font-size: 13px !important;
 }
 .badge {
-  font-size: 9px;
+  font-size: 13px;
   color: #657454;
 }
 .badge.production,
@@ -3121,21 +3121,21 @@ button:active:not(:disabled) {
   color: #a26950;
 }
 .activity-item p {
-  font-size: 11px;
+  font-size: 15px;
   color: #546a4d;
 }
 .activity-item > div:last-child > span {
-  font-size: 9px;
+  font-size: 13px;
 }
 .activity-link,
 .activity-bottom {
   color: #5f7b47;
 }
 .activity-link {
-  font-size: 9px;
+  font-size: 13px;
 }
 .activity-bottom {
-  font-size: 10px;
+  font-size: 13px;
 }
 .activity-live,
 .demo-label {
@@ -3143,7 +3143,7 @@ button:active:not(:disabled) {
 }
 .table-footer,
 .dashboard-footer {
-  font-size: 9px;
+  font-size: 13px;
 }
 .eyebrow {
   color: #73816c;
@@ -3158,41 +3158,41 @@ button:active:not(:disabled) {
   color: #445f38;
 }
 .help-body > p {
-  font-size: 13px;
+  font-size: 15px;
 }
 .help-step p {
-  font-size: 12px;
+  font-size: 15px;
 }
 .help-body > .form-hint {
-  font-size: 11px;
+  font-size: 15px;
 }
 .form-hint {
-  font-size: 11px;
+  font-size: 15px;
 }
 .auth-note p {
-  font-size: 11px;
+  font-size: 15px;
 }
 .auth-form-content .field {
-  font-size: 12px;
+  font-size: 15px;
 }
 .field {
-  font-size: 12px;
+  font-size: 15px;
 }
 .field input::placeholder,
 .field textarea::placeholder {
-  font-size: 12px;
+  font-size: 15px;
 }
 .detail-tabs > button {
-  font-size: 12px;
+  font-size: 15px;
 }
 .approval-item p {
-  font-size: 11px;
+  font-size: 15px;
 }
 .approval-confirm label {
-  font-size: 12px;
+  font-size: 15px;
 }
 .modal-header p {
-  font-size: 12px;
+  font-size: 15px;
 }
 .form-grid .field {
   min-width: 0;
@@ -3203,62 +3203,62 @@ button:active:not(:disabled) {
 }
 @media (max-width: 980px) {
   .nav-item {
-    font-size: 11px;
+    font-size: 15px;
   }
   .stat-top > span:first-child {
-    font-size: 10px;
+    font-size: 13px;
   }
   .stat-foot {
-    font-size: 9px;
+    font-size: 13px;
   }
 }
 @media (max-width: 760px) {
   .card-heading h2 {
-    font-size: 14px;
+    font-size: 16px;
   }
   .nav-item {
-    font-size: 12px;
+    font-size: 15px;
   }
   .stat-top > span:first-child {
-    font-size: 11px;
+    font-size: 15px;
   }
   .stat-foot {
-    font-size: 9px;
+    font-size: 13px;
   }
   .table-footer,
   .dashboard-footer {
-    font-size: 8px;
+    font-size: 13px;
   }
 }
 @media (max-width: 450px) {
   .global-search input {
-    font-size: 10px;
-  }
-  .breadcrumb {
-    font-size: 10px;
-  }
-  .card-heading h2 {
     font-size: 13px;
   }
+  .breadcrumb {
+    font-size: 13px;
+  }
+  .card-heading h2 {
+    font-size: 15px;
+  }
   .flow-stage > span {
-    font-size: 9px;
+    font-size: 13px;
   }
   .stat-top > span:first-child {
-    font-size: 10px;
+    font-size: 13px;
   }
   .stat-foot {
-    font-size: 8px;
+    font-size: 13px;
   }
   .activity-item p {
-    font-size: 10px;
+    font-size: 13px;
   }
   .cases-table th {
-    font-size: 8px;
+    font-size: 13px;
   }
   .case-title-button strong {
-    font-size: 10px;
+    font-size: 13px;
   }
   .badge {
-    font-size: 8px;
+    font-size: 13px;
   }
 }

@@ -32,8 +32,10 @@ async function saveScreenshot(page: Page, filename: string) {
   await page.evaluate(async () => {
     await document.fonts.ready;
   });
+  const model = page.locator('.model-view:visible').first();
+  if (await model.count()) await expect(model).toHaveAttribute('data-model-ready', 'true');
   if (await page.locator('.auth-story').isVisible()) {
-    await expect(page.locator('.auth-story .printer-scene canvas, .auth-story .printer-fallback')).toBeVisible();
+    await expect(page.locator('.auth-story .printer-scene')).toBeVisible();
   }
   await page.screenshot({
     path: resolve('test-results', filename),
@@ -46,19 +48,24 @@ async function expectNoHorizontalOverflow(page: Page) {
   const sizes = await page.evaluate(() => {
     const viewport = document.documentElement.clientWidth;
     const documentWidth = document.documentElement.scrollWidth;
-    const overflowing = documentWidth > viewport + 1
-      ? [...document.body.querySelectorAll<HTMLElement>('*')]
-        .filter(element => element.getBoundingClientRect().right > viewport + 1)
-        .slice(0, 16)
-        .map(element => ({
-          element: `${element.tagName}.${element.className}`,
-          right: Math.round(element.getBoundingClientRect().right),
-          width: Math.round(element.getBoundingClientRect().width),
-          overflowX: getComputedStyle(element).overflowX,
-          parent: element.parentElement ? `${element.parentElement.tagName}.${element.parentElement.className}` : '',
-          parentOverflowX: element.parentElement ? getComputedStyle(element.parentElement).overflowX : '',
-        }))
-      : [];
+    const overflowing =
+      documentWidth > viewport + 1
+        ? [...document.body.querySelectorAll<HTMLElement>('*')]
+            .filter((element) => element.getBoundingClientRect().right > viewport + 1)
+            .slice(0, 16)
+            .map((element) => ({
+              element: `${element.tagName}.${element.className}`,
+              right: Math.round(element.getBoundingClientRect().right),
+              width: Math.round(element.getBoundingClientRect().width),
+              overflowX: getComputedStyle(element).overflowX,
+              parent: element.parentElement
+                ? `${element.parentElement.tagName}.${element.parentElement.className}`
+                : '',
+              parentOverflowX: element.parentElement
+                ? getComputedStyle(element.parentElement).overflowX
+                : '',
+            }))
+        : [];
     return { document: documentWidth, viewport, overflowing };
   });
   expect(
@@ -85,50 +92,57 @@ test.describe.serial('Tobor local workspace', () => {
     await expect(
       page.getByRole('heading', { name: /Good (morning|afternoon|evening), Pilot/ }),
     ).toBeVisible();
-    for (const label of [
-      'Active cases',
-      'Printers in production',
-      'Awaiting approval',
-      'Quality checks passed',
-    ]) {
+    for (const label of ['Open requests', 'Need approval', 'Ready to send', 'Jobs delivered']) {
       await expect(page.locator('.stats-grid').getByText(label, { exact: true })).toBeVisible();
     }
     await expect(page.getByText('SAMPLE WORKSPACE', { exact: true })).toBeVisible();
-    await expect(page.locator('.printer-scene').locator('canvas, .printer-fallback')).toBeVisible();
+    await expect(page.locator('.welcome-art .model-view')).toBeVisible();
     await expectNoHorizontalOverflow(page);
     await saveScreenshot(page, 'tobor-overview-desktop.png');
 
     await page.getByRole('button', { name: 'New request', exact: true }).click();
     const createDialog = page.getByRole('dialog');
+    await createDialog.getByRole('button', { name: 'Next: item details', exact: true }).click();
+    await expect(
+      createDialog.getByRole('heading', { name: 'What can we help you with?', exact: true }),
+    ).toBeVisible();
     await createDialog.getByLabel('Request title', { exact: true }).fill(requestTitle);
-    await createDialog
-      .getByLabel('Customer / organization', { exact: true })
-      .fill('Orbit Test Lab');
+    await createDialog.getByLabel('Who is this for?', { exact: true }).fill('Orbit Test Lab');
     await createDialog.getByLabel('Contact email', { exact: true }).fill('lab@example.test');
     await createDialog
       .getByLabel('What do you need?', { exact: true })
       .fill('A removable bracket for a bench-mounted low-voltage sensor.');
+    await createDialog.getByRole('button', { name: 'Next: item details', exact: true }).click();
     await createDialog
-      .getByLabel('Intended use & environment', { exact: true })
+      .getByLabel('Where and how will it be used?', { exact: true })
       .fill(
         'Indoor supervised bench use; noncritical positioning accessory, with no lifting load.',
       );
     await createDialog
-      .getByLabel('Dimensions & units', { exact: true })
+      .getByLabel('Size (if known)', { exact: true })
       .fill('60 x 40 x 5 mm; measured mounting holes 30 mm apart');
     await createDialog
-      .getByLabel('Asset / device model', { exact: true })
+      .getByLabel('Device or model (if known)', { exact: true })
       .fill('Bench sensor model TEST-01');
-    await createDialog.getByLabel('Quantity', { exact: true }).fill('3');
     await createDialog
-      .getByRole('combobox', { name: 'Preferred material', exact: true })
+      .getByRole('combobox', { name: 'Material (optional)', exact: true })
       .selectOption('PETG');
     await createDialog
-      .getByLabel('Requested date', { exact: true })
-      .fill(new Date(Date.now() + 7 * 86_400_000).toISOString().slice(0, 10));
-    await createDialog
-      .getByRole('combobox', { name: 'Consequence of failure', exact: true })
+      .getByRole('combobox', { name: 'What if the item fails?', exact: true })
       .selectOption('low');
+    await createDialog.getByRole('button', { name: 'Back', exact: true }).click();
+    await expect(createDialog.getByLabel('Request title', { exact: true })).toHaveValue(
+      requestTitle,
+    );
+    await createDialog.getByRole('button', { name: 'Next: item details', exact: true }).click();
+    await expect(createDialog.getByLabel('Size (if known)', { exact: true })).toHaveValue(
+      '60 x 40 x 5 mm; measured mounting holes 30 mm apart',
+    );
+    await createDialog.getByRole('button', { name: 'Next: timing', exact: true }).click();
+    await createDialog.getByLabel('How many?', { exact: true }).fill('3');
+    await createDialog
+      .getByLabel('When do you need it?', { exact: true })
+      .fill(new Date(Date.now() + 7 * 86_400_000).toISOString().slice(0, 10));
     await createDialog.getByRole('button', { name: 'Create request', exact: true }).click();
 
     const details = page.getByRole('dialog', { name: requestTitle, exact: true });
@@ -179,7 +193,9 @@ test.describe.serial('Tobor local workspace', () => {
       headers: { origin: new URL(page.url()).origin },
     });
     expect(revoked.ok()).toBe(true);
-    await expect(page.getByRole('heading', { name: 'Welcome back.', exact: true })).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole('heading', { name: 'Welcome back.', exact: true })).toBeVisible({
+      timeout: 15_000,
+    });
     expect(runtimeErrors).toEqual([]);
   });
 
@@ -187,12 +203,12 @@ test.describe.serial('Tobor local workspace', () => {
     const runtimeErrors = watchRuntime(page);
     await signIn(page);
     const modules = [
-      { hash: 'cases', label: 'Cases & requests', heading: 'Every part has a story.' },
-      { hash: 'production', label: 'Production', heading: 'Good work, in motion.' },
-      { hash: 'quotes', label: 'Quotes & approvals', heading: 'Clarity before commitment.' },
-      { hash: 'quality', label: 'Quality control', heading: 'Confidence, checked.' },
-      { hash: 'library', label: 'Part library', heading: 'Build once. Learn forever.' },
-      { hash: 'insights', label: 'Insights', heading: 'See what moves you forward.' },
+      { hash: 'cases', label: 'Requests', heading: 'Requests' },
+      { hash: 'production', label: 'Make & repair', heading: 'Make & repair' },
+      { hash: 'quotes', label: 'Prices & approvals', heading: 'Prices & approvals' },
+      { hash: 'quality', label: 'Final checks', heading: 'Final checks' },
+      { hash: 'library', label: 'Saved parts', heading: 'Saved parts' },
+      { hash: 'insights', label: 'Reports', heading: 'Reports' },
     ];
     const navigation = page.getByRole('navigation', { name: 'Main navigation', exact: true });
     for (const module of modules) {
@@ -205,14 +221,12 @@ test.describe.serial('Tobor local workspace', () => {
     }
     await page.getByRole('button', { name: 'Workspace settings', exact: true }).last().click();
     await expect(page).toHaveURL(/#settings$/);
-    await expect(
-      page.getByRole('heading', { name: 'Make room for your way of working.', exact: true }),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
     await expect(page.getByLabel('Workspace name', { exact: true })).toHaveValue('Tobor Workshop');
-    await navigation.getByRole('button', { name: 'Overview', exact: true }).click();
+    await navigation.getByRole('button', { name: 'Home', exact: true }).click();
     await expect(page).toHaveURL(/#overview$/);
     await expect(
-      page.getByRole('heading', { name: 'Workshop at a glance', exact: true }),
+      page.getByRole('heading', { name: 'What needs to happen next?', exact: true }),
     ).toBeVisible();
     expect(runtimeErrors).toEqual([]);
   });
@@ -224,13 +238,24 @@ test.describe.serial('Tobor local workspace', () => {
     await expectNoHorizontalOverflow(page);
     await saveScreenshot(page, 'tobor-overview-mobile.png');
 
+    await page.getByRole('button', { name: 'Search requests', exact: true }).click();
+    await page
+      .getByRole('textbox', { name: 'Search cases, customers or assets', exact: true })
+      .fill(requestTitle);
+    await page
+      .locator('.search-results')
+      .getByRole('button', { name: new RegExp(requestTitle) })
+      .click();
+    const searchedRequest = page.getByRole('dialog', { name: requestTitle, exact: true });
+    await expect(searchedRequest).toBeVisible();
+    await searchedRequest.getByRole('button', { name: 'Close dialog', exact: true }).click();
+    await expect(page.locator('.global-search')).not.toBeVisible();
+
     await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
     const navigation = page.getByRole('navigation', { name: 'Main navigation', exact: true });
-    await expect(navigation.getByRole('button', { name: 'Overview', exact: true })).toBeVisible();
-    await navigation.getByRole('button', { name: /Cases & requests/ }).click();
-    await expect(
-      page.getByRole('heading', { name: 'Every part has a story.', exact: true }),
-    ).toBeVisible();
+    await expect(navigation.getByRole('button', { name: 'Home', exact: true })).toBeVisible();
+    await navigation.getByRole('button', { name: /Requests/ }).click();
+    await expect(page.getByRole('heading', { name: 'Requests', exact: true })).toBeVisible();
     await expect(page.locator('.sidebar')).not.toHaveClass(/is-open/);
     await expectNoHorizontalOverflow(page);
 
@@ -254,7 +279,7 @@ test.describe.serial('Tobor local workspace', () => {
     const runtimeErrors = watchRuntime(page);
     await signIn(page);
     const navigation = page.getByRole('navigation', { name: 'Main navigation', exact: true });
-    await navigation.getByRole('button', { name: 'Quotes & approvals', exact: true }).click();
+    await navigation.getByRole('button', { name: 'Prices & approvals', exact: true }).click();
     await page.getByRole('button', { name: 'Create quote', exact: true }).click();
     const quoteDialog = page.getByRole('dialog', { name: 'Build a clear quote', exact: true });
     await expect(quoteDialog).toBeVisible();
@@ -287,7 +312,7 @@ test.describe.serial('Tobor local workspace', () => {
     await approvalDialog.getByRole('button', { name: 'Record approval', exact: true }).click();
     await expect(quoteRow.getByText('Approval recorded', { exact: true })).toBeVisible();
 
-    await navigation.getByRole('button', { name: 'Quality control', exact: true }).click();
+    await navigation.getByRole('button', { name: 'Final checks', exact: true }).click();
     const inspectionCase = page.getByRole('button', { name: /Conveyor guide replacement/ });
     await inspectionCase.click();
     const release = page.getByRole('button', { name: 'Release to dispatch', exact: true });
@@ -316,7 +341,7 @@ test.describe.serial('Tobor local workspace', () => {
     await release.click();
     await expect(inspectionCase).toHaveCount(0);
 
-    await navigation.getByRole('button', { name: 'Part library', exact: true }).click();
+    await navigation.getByRole('button', { name: 'Saved parts', exact: true }).click();
     const part = page
       .getByRole('article')
       .filter({ has: page.getByRole('heading', { name: 'Cable routing clips', exact: true }) });
@@ -337,11 +362,159 @@ test.describe.serial('Tobor local workspace', () => {
     await expect(
       repeat.getByRole('textbox', { name: 'Request description', exact: true }),
     ).toHaveValue(/Reorder request/);
-    await expect(repeat.getByText('In assessment', { exact: true })).toBeVisible();
+    await expect(repeat.getByText('Being reviewed', { exact: true })).toBeVisible();
     await repeat.getByRole('tab', { name: 'Approvals', exact: true }).click();
     await expect(
       repeat.getByRole('button', { name: 'Record engineering release', exact: true }),
     ).toBeDisabled();
     expect(runtimeErrors).toEqual([]);
+  });
+
+  test('every page fits small phones, tablets and desktop; request controls stay reachable', async ({
+    page,
+  }) => {
+    const runtimeErrors = watchRuntime(page);
+    await signIn(page);
+    const modules = [
+      ['overview', 'What needs to happen next?'],
+      ['cases', 'Requests'],
+      ['quotes', 'Prices & approvals'],
+      ['production', 'Make & repair'],
+      ['quality', 'Final checks'],
+      ['library', 'Saved parts'],
+      ['insights', 'Reports'],
+      ['settings', 'Settings'],
+    ];
+    for (const width of [320, 390, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const [hash, heading] of modules) {
+        await page.evaluate((hash) => {
+          location.hash = hash;
+          window.scrollTo(0, 0);
+        }, hash);
+        await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+        await expectNoHorizontalOverflow(page);
+        if (
+          (width === 390 &&
+            ['quotes', 'production', 'quality', 'insights', 'settings'].includes(hash)) ||
+          (width === 1440 && ['cases', 'library'].includes(hash))
+        ) {
+          await saveScreenshot(page, `tobor-${hash}-${width}.png`);
+        }
+      }
+    }
+    await page.setViewportSize({ width: 320, height: 640 });
+    await page.evaluate(() => {
+      location.hash = 'overview';
+      window.scrollTo(0, 0);
+    });
+    await page.getByRole('button', { name: /Repair a device Get a supported robot/ }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('button', { name: /Repair a device/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await dialog.getByLabel('Request title', { exact: true }).fill('Mobile repair request');
+    await dialog
+      .getByLabel('What do you need?', { exact: true })
+      .fill('The small lab robot needs an inspection.');
+    await dialog.getByLabel('Who is this for?', { exact: true }).fill('Mobile workshop');
+    const next = dialog.getByRole('button', { name: 'Next: item details', exact: true });
+    await expect(next).toBeInViewport();
+    await expectNoHorizontalOverflow(page);
+    await page.screenshot({
+      path: resolve('test-results', 'tobor-guided-request-320.png'),
+      animations: 'disabled',
+    });
+    await next.click();
+    await expect(
+      dialog.getByRole('heading', { name: 'Tell us about the item', exact: true }),
+    ).toBeFocused();
+    await expect(
+      dialog.getByRole('button', { name: 'Next: timing', exact: true }),
+    ).toBeInViewport();
+    await expectNoHorizontalOverflow(page);
+    expect(runtimeErrors).toEqual([]);
+  });
+
+  test('3D scenes share a canvas, follow scroll, and respect pause and reduced motion', async ({
+    page,
+  }) => {
+    const runtimeErrors = watchRuntime(page);
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await signIn(page);
+    const canvas = page.locator('.model-canvas');
+    await expect(page.locator('canvas')).toHaveCount(1);
+    await expect(canvas).toHaveAttribute('data-status', 'ready');
+    await expect(canvas).toHaveAttribute('data-motion', 'running');
+    const firstFrame = Number(await canvas.getAttribute('data-render-count'));
+    await expect
+      .poll(async () => Number(await canvas.getAttribute('data-render-count')))
+      .toBeGreaterThan(firstFrame);
+    await page.getByRole('button', { name: 'Pause 3D animation', exact: true }).click();
+    await expect(canvas).toHaveAttribute('data-motion', 'paused');
+    await page.waitForTimeout(150);
+    const pausedFrame = await canvas.getAttribute('data-render-count');
+    await page.waitForTimeout(200);
+    expect(await canvas.getAttribute('data-render-count')).toBe(pausedFrame);
+    await page.reload();
+    await expect(
+      page.getByRole('button', { name: 'Play 3D animation', exact: true }),
+    ).toBeVisible();
+    await page.locator('.journey-section').scrollIntoViewIfNeeded();
+    for (const model of await page.locator('.journey-section .model-view').all()) {
+      await expect(model).toHaveAttribute('data-model-ready', 'true');
+    }
+    await expect
+      .poll(async () => Number(await canvas.getAttribute('data-visible-models')))
+      .toBeGreaterThanOrEqual(5);
+    await page.screenshot({
+      path: resolve('test-results', 'tobor-journey-3d.png'),
+      animations: 'disabled',
+    });
+    await page.getByRole('button', { name: 'Play 3D animation', exact: true }).click();
+    await expect(canvas).toHaveAttribute('data-motion', 'running');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(canvas).toHaveAttribute('data-motion', 'paused');
+    await page.waitForTimeout(150);
+    const reducedFrame = await canvas.getAttribute('data-render-count');
+    await page.waitForTimeout(200);
+    expect(await canvas.getAttribute('data-render-count')).toBe(reducedFrame);
+    await canvas.evaluate((element: HTMLCanvasElement & { restoreTestContext?: () => void }) => {
+      const extension = element.getContext('webgl2')?.getExtension('WEBGL_lose_context');
+      if (!extension) throw new Error('The test browser must support simulated context loss.');
+      element.restoreTestContext = () => extension.restoreContext();
+      extension.loseContext();
+    });
+    await expect(canvas).toHaveAttribute('data-status', 'fallback');
+    await page.waitForTimeout(180);
+    await expect(page.locator('.journey-section .model-fallback').first()).toHaveCSS(
+      'opacity',
+      '1',
+    );
+    await canvas.evaluate((element: HTMLCanvasElement & { restoreTestContext?: () => void }) => {
+      element.restoreTestContext?.();
+      delete element.restoreTestContext;
+    });
+    await expect(canvas).toHaveAttribute('data-status', 'ready');
+    await page.locator('.journey-section').scrollIntoViewIfNeeded();
+    await expect(page.locator('.journey-section .model-view').first()).toHaveAttribute(
+      'data-model-ready',
+      'true',
+    );
+    expect(runtimeErrors).toEqual([]);
+  });
+
+  test('dashboard and request form remain usable if the 3D library cannot load', async ({
+    page,
+  }) => {
+    await page.route(/\/assets\/three-[^/]+\.js$/, (route) => route.abort());
+    await signIn(page);
+    await expect(page.locator('.model-canvas')).toHaveAttribute('data-status', 'fallback');
+    await expect(page.locator('.welcome-art .model-fallback')).toHaveCSS('opacity', '1');
+    await page.getByRole('button', { name: 'New request', exact: true }).click();
+    await expect(
+      page.getByRole('dialog').getByLabel('Request title', { exact: true }),
+    ).toBeEditable();
   });
 });
